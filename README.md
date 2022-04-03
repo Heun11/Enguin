@@ -1,7 +1,7 @@
-## Minimalistic Game Engine
+# Minimalistic Game Engine
 docs:
 - link
-# Usage
+## Usage
 - Linux(Debian):
 	1. download .h header file
 	2. install libraries:
