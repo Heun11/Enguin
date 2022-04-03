@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<ncurses.h>
 
 typedef struct{
 	int r,g,b;
@@ -53,42 +54,67 @@ void ASH_Delay(float seconds)
 	usleep((int)(seconds*1000000.0f));
 }
 
+int ASH_UTILS_NumOfDigits(int n)
+{
+	int c = 0;
+	while(n!=0){
+		n/=10;
+		c++;
+	}
+	return c;
+}
+
+void ASH_UTILS_AppendToString(char* str, char *buf, int len, int start)
+{
+	for(int i=0;i<len;i++){
+		str[start+i] = buf[i];
+	}
+}
+
 void ASH_UpdateSurface(ASH_Surface* s)
 {
-	int i,j;
+	int i;
 	system("clear");
-	ASH_Char c;
 
-	// for(i=0;i<s->height;i++){
-	// 	for(j=0;j<s->width;j++){
-	// 		(s->surface2+i*s->width+j)->ch = (s->surface1+i*s->width+j)->ch;
-	// 		(s->surface2+i*s->width+j)->color.r = (s->surface1+i*s->width+j)->color.r;
-	// 		(s->surface2+i*s->width+j)->color.g = (s->surface1+i*s->width+j)->color.g;
-	// 		(s->surface2+i*s->width+j)->color.b = (s->surface1+i*s->width+j)->color.b;
-	// 		(s->surface2+i*s->width+j)->color.type = (s->surface1+i*s->width+j)->color.type;
-			
-	// 		(s->surface1+i*s->width+j)->ch = ' ';
-	// 		(s->surface1+i*s->width+j)->color.r = 25;
-	// 		(s->surface1+i*s->width+j)->color.g = 25;
-	// 		(s->surface1+i*s->width+j)->color.b = 25;
-	// 		(s->surface1+i*s->width+j)->color.type = 0;
-			
+	// char* str = (char*)malloc(20*sizeof(char)*s->width*s->height+s->height);
+	// int buf_size, buf_count = 0;
 
-	// 		c.ch = (s->surface2+i*s->width+j)->ch;
-	// 		c.color.r = (s->surface2+i*s->width+j)->color.r;
-	// 		c.color.g = (s->surface2+i*s->width+j)->color.g;
-	// 		c.color.b = (s->surface2+i*s->width+j)->color.b;
-	// 		c.color.type = (s->surface2+i*s->width+j)->color.type;
-	// 		if(c.color.type){
-	// 			printf("\x1b[38;2;%d;%d;%dm%c%c", c.color.r, c.color.g, c.color.b, c.ch, c.ch);
-	// 		}
-	// 		else{
-	// 			printf("\x1b[48;2;%d;%d;%dm%c%c", c.color.r, c.color.g, c.color.b, c.ch, c.ch);
-	// 		}
-	// 		printf("\033[0m");
+	// for(i=0;i<(s->width*s->height);i++){
+
+	// 	(s->surface2+i)->ch = (s->surface1+i)->ch;
+	// 	(s->surface2+i)->color.r = (s->surface1+i)->color.r;
+	// 	(s->surface2+i)->color.g = (s->surface1+i)->color.g;
+	// 	(s->surface2+i)->color.b = (s->surface1+i)->color.b;
+	// 	(s->surface2+i)->color.type = (s->surface1+i)->color.type;
+
+	// 	(s->surface1+i)->ch = ' ';
+	// 	(s->surface1+i)->color.r = 25;
+	// 	(s->surface1+i)->color.g = 25;
+	// 	(s->surface1+i)->color.b = 25;
+	// 	(s->surface1+i)->color.type = 0;
+
+	// 	buf_size = 10+2+ASH_UTILS_NumOfDigits((s->surface2+i)->color.r)
+	// 		+ASH_UTILS_NumOfDigits((s->surface2+i)->color.g)+ASH_UTILS_NumOfDigits((s->surface2+i)->color.b);
+	// 	char buf[buf_size];
+	// 	if((s->surface2+i)->color.type){
+	// 		snprintf(buf, 20, "\x1b[38;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
+	// 				(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
 	// 	}
-	// 	printf("\n");
+	// 	else{
+	// 		snprintf(buf, 20, "\x1b[48;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
+	// 				(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
+	// 	}
+	// 	ASH_UTILS_AppendToString(str,buf,buf_size,buf_count);
+	// 	buf_count+=buf_size;
+	// 	if((i+1)%s->width==0){
+	// 		str[buf_count] = '\n';
+	// 		buf_count+=1;
+	// 	}
+	// 	str[buf_count] = '\0';
 	// }
+	// printf("%s", str);
+	// printf("\033[0m");
+
 	for(i=0;i<(s->width*s->height);i++){
 		(s->surface2+i)->ch = (s->surface1+i)->ch;
 		(s->surface2+i)->color.r = (s->surface1+i)->color.r;
@@ -102,16 +128,13 @@ void ASH_UpdateSurface(ASH_Surface* s)
 		(s->surface1+i)->color.b = 25;
 		(s->surface1+i)->color.type = 0;
 
-		c.ch = (s->surface2+i)->ch;
-		c.color.r = (s->surface2+i)->color.r;
-		c.color.g = (s->surface2+i)->color.g;
-		c.color.b = (s->surface2+i)->color.b;
-		c.color.type = (s->surface2+i)->color.type;
-		if(c.color.type){
-			printf("\x1b[38;2;%d;%d;%dm%c%c", c.color.r, c.color.g, c.color.b, c.ch, c.ch);
+		if((s->surface2+i)->color.type){
+			printf("\x1b[38;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
+					(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
 		}
 		else{
-			printf("\x1b[48;2;%d;%d;%dm%c%c", c.color.r, c.color.g, c.color.b, c.ch, c.ch);
+			printf("\x1b[48;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
+					(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
 		}
 		printf("\033[0m");
 		
