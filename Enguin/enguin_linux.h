@@ -7,28 +7,28 @@
 typedef struct{
 	int r,g,b;
 	int type;
-}ASH_Color;
+}ENGUIN_Color;
 
 typedef struct{
 	char ch;
-	ASH_Color color;
-}ASH_Char;
+	ENGUIN_Color color;
+}ENGUIN_Char;
 
 typedef struct{
 	int width;
 	int height;
-	ASH_Char* surface1;
-	ASH_Char* surface2;
-}ASH_Surface;
+	ENGUIN_Char* surface1;
+	ENGUIN_Char* surface2;
+}ENGUIN_Surface;
 
-ASH_Surface ASH_CreateSurface(int s_w, int s_h)
+ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h)
 {
 	printf("\e[8;%d;%dt", s_h+1, s_w*2);
-	ASH_Surface s;
+	ENGUIN_Surface s;
 	s.width = s_w;
 	s.height = s_h;
-	s.surface1 = (ASH_Char*)malloc(s_w*s_h*sizeof(ASH_Char));
-	s.surface2 = (ASH_Char*)malloc(s_w*s_h*sizeof(ASH_Char));
+	s.surface1 = (ENGUIN_Char*)malloc(s_w*s_h*sizeof(ENGUIN_Char));
+	s.surface2 = (ENGUIN_Char*)malloc(s_w*s_h*sizeof(ENGUIN_Char));
 	for(int i=0;i<(s_w*s_h);i++){
 		s.surface1[i].ch = ' ';
 		s.surface1[i].color.r = 25;
@@ -39,7 +39,7 @@ ASH_Surface ASH_CreateSurface(int s_w, int s_h)
 	return s;
 }
 
-void ASH_KillSurface(ASH_Surface* s)
+void ENGUIN_KillSurface(ENGUIN_Surface* s)
 {
 	free(s->surface1);
 	free(s->surface2);
@@ -49,12 +49,12 @@ void ASH_KillSurface(ASH_Surface* s)
 	s->height = 0;
 }
 
-void ASH_Delay(float seconds)
+void ENGUIN_Delay(float seconds)
 {
 	usleep((int)(seconds*1000000.0f));
 }
 
-int ASH_UTILS_NumOfDigits(int n)
+int ENGUIN_UTILS_NumOfDigits(int n)
 {
 	int c = 0;
 	while(n!=0){
@@ -64,14 +64,14 @@ int ASH_UTILS_NumOfDigits(int n)
 	return c;
 }
 
-void ASH_UTILS_AppendToString(char* str, char *buf, int len, int start)
+void ENGUIN_UTILS_AppendToString(char* str, char *buf, int len, int start)
 {
 	for(int i=0;i<len;i++){
 		str[start+i] = buf[i];
 	}
 }
 
-void ASH_UpdateSurface(ASH_Surface* s)
+void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 {
 	int i;
 	system("clear");
@@ -144,7 +144,7 @@ void ASH_UpdateSurface(ASH_Surface* s)
 	}
 }
 
-void ASH_DrawPoint(ASH_Surface* s, char c, int x, int y, int r, int g, int b, int type)
+void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, int r, int g, int b, int type)
 {
 	if(x<s->width && y<s->height){
 		(s->surface1+y*s->width+x)->ch = c;
