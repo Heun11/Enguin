@@ -2,12 +2,12 @@
 docs:
 - link
 ## Usage
-- Linux(Debian):
-	i. download Enguin folder
-	ii. install libraries:
+Linux(Debian):
+	1. download Enguin folder
+	2. install libraries:
 		- sudo apt-get install libncurses5-dev libncursesw5-dev
-	iii. use as in docs and compile
-	iv. run
+	3. use as in docs and compile
+	4. run
 
-- Windows:
-	i. Fuck off
+Windows:
+	1. Fuck off
