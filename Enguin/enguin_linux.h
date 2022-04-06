@@ -3,7 +3,8 @@
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
-#include<ncurses.h>
+#include<signal.h>
+// #include<ncurses.h>
 
 typedef struct{
 	int r,g,b;
@@ -22,9 +23,32 @@ typedef struct{
 	ENGUIN_Char* surface2;
 }ENGUIN_Surface;
 
+void ENGUIN_StrongKill(int sig_num)
+{
+    signal(SIGINT, ENGUIN_StrongKill);
+	system("tput cnorm");
+	system("clear");
+    exit(0);
+    fflush(stdout);
+}
+
+void ENGUIN_KillSurface(ENGUIN_Surface* s)
+{
+	free(s->surface1);
+	free(s->surface2);
+	s->surface1 = NULL;
+	s->surface2 = NULL;
+	s->width = 0;
+	s->height = 0;
+	system("tput cnorm");
+}
+
 ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h)
 {
-	printf("\e[8;%d;%dt", s_h+1, s_w*2);
+	printf("\e[8;%d;%dt", s_h+2, s_w*2);
+	system("tput civis");
+	system("clear");
+	signal(SIGINT, ENGUIN_StrongKill);
 	ENGUIN_Surface s;
 	s.width = s_w;
 	s.height = s_h;
@@ -38,16 +62,6 @@ ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h)
 		s.surface1[i].color.type = 0;
 	}
 	return s;
-}
-
-void ENGUIN_KillSurface(ENGUIN_Surface* s)
-{
-	free(s->surface1);
-	free(s->surface2);
-	s->surface1 = NULL;
-	s->surface2 = NULL;
-	s->width = 0;
-	s->height = 0;
 }
 
 void ENGUIN_Delay(float seconds)
@@ -68,7 +82,14 @@ int ENGUIN_UTILS_CountDigits(int n)
 void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 {
 	int i;
-	system("clear");
+	// system("clear");
+
+	//TESTING
+	// system("tput civis");
+	system("echo \"\x1B[0;0H\"");
+
+	// tput civis	-- invisible
+	// tput cnorm	-- normal
 
 	//SLOW
 	char* str = (char*)malloc(1+(27)*sizeof(char)*s->width*s->height+s->height);
@@ -106,6 +127,7 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 		}
 	}
 	printf("%s", str);
+	// system("tput cnorm");
 	free(str);
 	str = NULL;
 
@@ -149,5 +171,3 @@ void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, int r, int g, int
 		(s->surface1+y*s->width+x)->color.type = type;
 	}
 }
-
-
