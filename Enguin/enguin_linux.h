@@ -82,16 +82,7 @@ int ENGUIN_UTILS_CountDigits(int n)
 void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 {
 	int i;
-	// system("clear");
-
-	//TESTING
-	// system("tput civis");
 	system("echo \"\x1B[0;0H\"");
-
-	// tput civis	-- invisible
-	// tput cnorm	-- normal
-
-	//SLOW
 	char* str = (char*)malloc(1+(27)*sizeof(char)*s->width*s->height+s->height);
 	strcpy(str, "");
 	int buf_size;
@@ -127,38 +118,8 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 		}
 	}
 	printf("%s", str);
-	// system("tput cnorm");
 	free(str);
 	str = NULL;
-
-	//SLOWER
-	// for(i=0;i<(s->width*s->height);i++){
-	// 	(s->surface2+i)->ch = (s->surface1+i)->ch;
-	// 	(s->surface2+i)->color.r = (s->surface1+i)->color.r;
-	// 	(s->surface2+i)->color.g = (s->surface1+i)->color.g;
-	// 	(s->surface2+i)->color.b = (s->surface1+i)->color.b;
-	// 	(s->surface2+i)->color.type = (s->surface1+i)->color.type;
-
-	// 	(s->surface1+i)->ch = ' ';
-	// 	(s->surface1+i)->color.r = 25;
-	// 	(s->surface1+i)->color.g = 25;
-	// 	(s->surface1+i)->color.b = 25;
-	// 	(s->surface1+i)->color.type = 0;
-
-	// 	if((s->surface2+i)->color.type){
-	// 		printf("\x1b[38;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
-	// 				(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
-	// 	}
-	// 	else{
-	// 		printf("\x1b[48;2;%d;%d;%dm%c%c", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
-	// 				(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
-	// 	}
-	// 	printf("\033[0m");
-		
-	// 	if((i+1)%s->width==0){
-	// 		printf("\n");
-	// 	}
-	// }
 }
 
 void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, int r, int g, int b, int type)
