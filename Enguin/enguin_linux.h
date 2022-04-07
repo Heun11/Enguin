@@ -4,21 +4,25 @@
 #include<string.h>
 #include<unistd.h>
 #include<signal.h>
-// #include<ncurses.h>
 
 typedef struct{
 	int r,g,b;
-	int type;
 }ENGUIN_Color;
 
 typedef struct{
 	char ch;
-	ENGUIN_Color color;
+	ENGUIN_Color back_c;
+	ENGUIN_Color front_c;
 }ENGUIN_Char;
 
 typedef struct{
 	int width;
 	int height;
+
+	char ch;
+	ENGUIN_Color back_c;
+	ENGUIN_Color front_c;
+
 	ENGUIN_Char* surface1;
 	ENGUIN_Char* surface2;
 }ENGUIN_Surface;
@@ -43,7 +47,7 @@ void ENGUIN_KillSurface(ENGUIN_Surface* s)
 	system("tput cnorm");
 }
 
-ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h)
+ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h, char c, ENGUIN_Color* back_c, ENGUIN_Color* front_c)
 {
 	printf("\e[8;%d;%dt", s_h+2, s_w*2);
 	system("tput civis");
@@ -55,11 +59,23 @@ ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h)
 	s.surface1 = (ENGUIN_Char*)malloc(s_w*s_h*sizeof(ENGUIN_Char));
 	s.surface2 = (ENGUIN_Char*)malloc(s_w*s_h*sizeof(ENGUIN_Char));
 	for(int i=0;i<(s_w*s_h);i++){
-		s.surface1[i].ch = ' ';
-		s.surface1[i].color.r = 25;
-		s.surface1[i].color.g = 25;
-		s.surface1[i].color.b = 25;
-		s.surface1[i].color.type = 0;
+		s.surface1[i].ch = c;
+		s.surface1[i].back_c.r = back_c->r;
+		s.surface1[i].back_c.g = back_c->g;
+		s.surface1[i].back_c.b = back_c->b;
+
+		s.surface1[i].front_c.r = front_c->r;
+		s.surface1[i].front_c.g = front_c->g;
+		s.surface1[i].front_c.b = front_c->b;
+
+		s.ch = c;
+		s.back_c.r = back_c->r;
+		s.back_c.g = back_c->g;
+		s.back_c.b = back_c->b;
+
+		s.front_c.r = front_c->r;
+		s.front_c.g = front_c->g;
+		s.front_c.b = front_c->b;
 	}
 	return s;
 }
@@ -83,34 +99,40 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 {
 	int i;
 	system("echo \"\x1B[0;0H\"");
-	char* str = (char*)malloc(1+(27)*sizeof(char)*s->width*s->height+s->height);
+	char* str = (char*)malloc(1+(44)*sizeof(char)*s->width*s->height+s->height);
 	strcpy(str, "");
 	int buf_size;
 
 	for(i=0;i<(s->width*s->height);i++){
 		(s->surface2+i)->ch = (s->surface1+i)->ch;
-		(s->surface2+i)->color.r = (s->surface1+i)->color.r;
-		(s->surface2+i)->color.g = (s->surface1+i)->color.g;
-		(s->surface2+i)->color.b = (s->surface1+i)->color.b;
-		(s->surface2+i)->color.type = (s->surface1+i)->color.type;
+		(s->surface2+i)->back_c.r = (s->surface1+i)->back_c.r;
+		(s->surface2+i)->back_c.g = (s->surface1+i)->back_c.g;
+		(s->surface2+i)->back_c.b = (s->surface1+i)->back_c.b;
+		(s->surface2+i)->front_c.r = (s->surface1+i)->front_c.r;
+		(s->surface2+i)->front_c.g = (s->surface1+i)->front_c.g;
+		(s->surface2+i)->front_c.b = (s->surface1+i)->front_c.b;
 
-		(s->surface1+i)->ch = ' ';
-		(s->surface1+i)->color.r = 25;
-		(s->surface1+i)->color.g = 25;
-		(s->surface1+i)->color.b = 25;
-		(s->surface1+i)->color.type = 0;
+		(s->surface1+i)->ch = s->ch;
+		(s->surface1+i)->back_c.r = s->back_c.r;
+		(s->surface1+i)->back_c.g = s->back_c.g;
+		(s->surface1+i)->back_c.b = s->back_c.b;
+		(s->surface1+i)->front_c.r = s->front_c.r;
+		(s->surface1+i)->front_c.g = s->front_c.g;
+		(s->surface1+i)->front_c.b = s->front_c.b;
 
-		buf_size = 16+2+1+ENGUIN_UTILS_CountDigits((s->surface2+i)->color.r)
-			+ENGUIN_UTILS_CountDigits((s->surface2+i)->color.g)+ENGUIN_UTILS_CountDigits((s->surface2+i)->color.b);
+		buf_size = 24+2+1+ENGUIN_UTILS_CountDigits((s->surface2+i)->back_c.r)
+						+ENGUIN_UTILS_CountDigits((s->surface2+i)->back_c.g)
+						+ENGUIN_UTILS_CountDigits((s->surface2+i)->back_c.b)
+						+ENGUIN_UTILS_CountDigits((s->surface2+i)->front_c.r)
+						+ENGUIN_UTILS_CountDigits((s->surface2+i)->front_c.g)
+						+ENGUIN_UTILS_CountDigits((s->surface2+i)->front_c.b);
+
 		char* buf = (char*)malloc(buf_size);
-		if((s->surface2+i)->color.type){
-			snprintf(buf, 27, "\x1b[38;2;%d;%d;%dm%c%c\033[0m", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
-					(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
-		}
-		else{
-			snprintf(buf, 27, "\x1b[48;2;%d;%d;%dm%c%c\033[0m", (s->surface2+i)->color.r, (s->surface2+i)->color.g, 
-					(s->surface2+i)->color.b, (s->surface2+i)->ch, (s->surface2+i)->ch);
-		}
+		snprintf(buf,44,"\x1b[48;2;%d;%d;%dm\x1b[38;2;%d;%d;%dm%c%c\033[0m", 
+				(s->surface2+i)->back_c.r, (s->surface2+i)->back_c.g, (s->surface2+i)->back_c.b,
+				(s->surface2+i)->front_c.r, (s->surface2+i)->front_c.g, (s->surface2+i)->front_c.b, 
+				(s->surface2+i)->ch, (s->surface2+i)->ch);
+
 		strcat(str, buf);
 		free(buf);
 		if((i+1)%s->width==0){
@@ -122,13 +144,16 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 	str = NULL;
 }
 
-void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, int r, int g, int b, int type)
+void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, ENGUIN_Color* back_c, ENGUIN_Color* front_c)
 {
 	if(x<s->width && y<s->height){
 		(s->surface1+y*s->width+x)->ch = c;
-		(s->surface1+y*s->width+x)->color.r = r;
-		(s->surface1+y*s->width+x)->color.g = g;
-		(s->surface1+y*s->width+x)->color.b = b;
-		(s->surface1+y*s->width+x)->color.type = type;
+		(s->surface1+y*s->width+x)->back_c.r = back_c->r;
+		(s->surface1+y*s->width+x)->back_c.g = back_c->g;
+		(s->surface1+y*s->width+x)->back_c.b = back_c->b;
+
+		(s->surface1+y*s->width+x)->front_c.r = front_c->r;
+		(s->surface1+y*s->width+x)->front_c.g = front_c->g;
+		(s->surface1+y*s->width+x)->front_c.b = front_c->b;
 	}
 }

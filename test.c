@@ -4,15 +4,15 @@
 
 int main()
 {
-	int WIDTH = 100, HEIGHT = 100;
-	ENGUIN_Surface surface = ENGUIN_CreateSurface(WIDTH,HEIGHT);
+	int WIDTH = 50, HEIGHT = 50;
+	ENGUIN_Surface surface = ENGUIN_CreateSurface(WIDTH,HEIGHT, ' ', &((ENGUIN_Color){20,20,20}),&((ENGUIN_Color){0,0,0}));
 	float x = 8;
 	float y = 6;
-	float dy = 1.2;
-	float dx = 1.5;
+	float dy = 0.2;
+	float dx = 0.5;
 
 	while(1){
-		ENGUIN_DrawPoint(&surface,' ',(int)x,(int)y,50,166,168,0);
+		ENGUIN_DrawPoint(&surface,' ',(int)x,(int)y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){0,0,0}));
 		x+=dx;
 		y+=dy;
 
@@ -31,7 +31,7 @@ int main()
 		}
 
 		ENGUIN_UpdateSurface(&surface);
-		ENGUIN_Delay((float)1/60);
+		ENGUIN_Delay((float)1/30);
 	}
 	ENGUIN_KillSurface(&surface);
 	return 0;
