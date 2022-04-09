@@ -146,7 +146,7 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 
 void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, ENGUIN_Color* back_c, ENGUIN_Color* front_c)
 {
-	if(x<s->width && y<s->height){
+	if(x<s->width && y<s->height && x>=0 && y>=0){
 		(s->surface1+y*s->width+x)->ch = c;
 		(s->surface1+y*s->width+x)->back_c.r = back_c->r;
 		(s->surface1+y*s->width+x)->back_c.g = back_c->g;
@@ -157,3 +157,4 @@ void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, ENGUIN_Color* bac
 		(s->surface1+y*s->width+x)->front_c.b = front_c->b;
 	}
 }
+

@@ -1,13 +1,12 @@
 # Minimalistic Game Engine (Enguin)
 docs:
 - link
-## Usage
+## Development
 - Linux(Debian):
 	1. download Enguin folder
-	2. install libraries:
-		- sudo apt-get install libncurses5-dev libncursesw5-dev
-	3. use as in docs and compile
-	4. run
+	2. use as in docs
+	3. compile: make
+	4. run: sudo ./name
 
 - Windows:
 	1. Fuck off

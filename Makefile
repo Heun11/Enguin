@@ -1,4 +1,4 @@
-test: test.c Enguin/enguin_linux.h
+test: test.c Enguin/linux/*.h
 	gcc test.c -o test
 
 clean:
