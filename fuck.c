@@ -2,66 +2,6 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<string.h>
-
-// #include <termios.h>
-// #include <fcntl.h>
-
-// int getch_echo(int echo){
-//       struct termios oldt, newt;
-//       int ch;
-//       tcgetattr( STDIN_FILENO, &oldt );
-//       newt = oldt;
-//       newt.c_lflag &= ~ICANON;
-//       if(echo)
-// 	newt.c_lflag &=  ECHO;
-//       else
-// 	newt.c_lflag &= ~ECHO;
-//       tcsetattr( STDIN_FILENO, TCSANOW, &newt );
-//       ch = getchar();
-//       tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
-//       return ch;
-//       }
-      
-//     int getch(){
-//       getch_echo(0);
-//       }
-      
-//     int getche(){
-//       getch_echo(1);
-//       }
-
-//     int kbhit(){
-//       struct termios oldt, newt;
-//       int ch;
-//       int oldf;    
-//       tcgetattr(STDIN_FILENO, &oldt);
-//       newt = oldt;
-//       newt.c_lflag &= ~(ICANON | ECHO);
-//       tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-//       oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-//       fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);    
-//       ch = getchar();    
-//       tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-//       fcntl(STDIN_FILENO, F_SETFL, oldf);    
-//       if(ch != EOF){
-// 	ungetc(ch, stdin);
-// 	return 1;
-// 	}    
-//       return 0;
-//       }
-
-
-// int main(int argc, char const *argv[])
-// {
-// 	while(1){
-// 		if(kbhit()){
-// 			int c = getch();
-// 			printf("Pressed ASCII %d\n", c);
-// 		}
-// 	}
-// 	return 0;
-// }
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -69,6 +9,7 @@
 #include <linux/input.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <pthread.h>
 
 #define INPUT_DIR "/dev/input/"
 
@@ -143,20 +84,63 @@ void INThandler(){
   	exit(0);
 }
 
+int checkInput(int device)
+{
+    struct input_event ev;
+    read(device,&ev, sizeof(ev));
+    if(ev.type==1&&ev.value>0){
+        return ev.code;
+    }
+    else{
+        return -1;
+    }
+}
+
+typedef struct{
+    int value;
+}key_s;
+
+void* testThread(void *args)
+{
+    char *devname = get_keyboard_event_file();
+    int device = open(devname, O_RDONLY);
+    
+    key_s* key = args;
+
+    while(1){
+        int k = checkInput(device);
+        if(k!=-1){
+            key->value = k;
+            usleep((1/60)*1000000);
+            key->value = -1;
+        }
+    }
+
+    free(key);
+}
+
 int main()
 {
-        char *devname = get_keyboard_event_file();
-        int device = open(devname, O_RDONLY);
-        struct input_event ev;
+        key_s *key = malloc(sizeof *key);
+        key->value = -1;
+        int last_k, k;
+
+        pthread_t thr_id;
+        pthread_create(&thr_id, NULL, testThread, key);
 
         signal(SIGINT, INThandler);
         system("stty -echo");
         while(1)
         {
-                read(device,&ev, sizeof(ev));
-                if(ev.type == 1 && ev.value == 1){
-                        printf("Key: %i State: %i\n",ev.code,ev.value);
+            k = key->value;
+            if(k!=last_k){
+                last_k = k;
+                if(last_k!=-1){
+                    printf("%d\n", k);
                 }
+            }
+
+            usleep((1/60)*1000000);
         }
         system("stty echo");
 }

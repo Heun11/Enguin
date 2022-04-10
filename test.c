@@ -10,7 +10,7 @@ int main()
 	float dy = 0.2;
 	float dx = 0.5;
 
-	ENGUIN_Surface surface = ENGUIN_CreateSurface(WIDTH,HEIGHT, 'Y', &((ENGUIN_Color){40,40,40}),&((ENGUIN_Color){102,186,157}));
+	ENGUIN_Surface surface = ENGUIN_CreateSurface(WIDTH,HEIGHT, ' ', &((ENGUIN_Color){40,40,40}),&((ENGUIN_Color){102,186,157}));
 
 	while(1){
 		ENGUIN_DrawPoint(&surface,' ',(int)x,(int)y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
