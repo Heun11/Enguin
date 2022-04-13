@@ -5,34 +5,41 @@
 int main()
 {
 	int WIDTH = 50, HEIGHT = 50;
-	float x = 8;
-	float y = 6;
-	float dy = 0.2;
-	float dx = 0.5;
+	int x = 0;
+	int y = 0;
 
 	ENGUIN_Surface surface = ENGUIN_CreateSurface(WIDTH,HEIGHT, ' ', &((ENGUIN_Color){40,40,40}),&((ENGUIN_Color){102,186,157}));
 
+	char c;
+
 	while(1){
-		ENGUIN_DrawPoint(&surface,' ',(int)x,(int)y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
-		x+=dx;
-		y+=dy;
+		if(ENGUIN_Kbhit()){
+			c = ENGUIN_Getch();
+			if(c=='q'){
+				break;
+				ENGUIN_KillSurface(&surface);
+			}
+			else if(c=='w'){
+				y-=1;
+			}
+			else if(c=='s'){
+				y+=1;
+			}
+			else if(c=='a'){
+				x-=1;
+			}
+			else if(c=='d'){
+				x+=1;
+			}
+		}
 
-		if(x>WIDTH-1){
-			dx = dx*(-1);
-		}
-		if(x<1){
-			dx = dx*(-1);
-		}
-
-		if(y>HEIGHT-1){
-			dy = dy*(-1);
-		}
-		if(y<1){
-			dy = dy*(-1);
-		}
+		ENGUIN_DrawPoint(&surface,' ',x,y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
+		ENGUIN_DrawPoint(&surface,' ',x+1,y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
+		ENGUIN_DrawPoint(&surface,' ',x,y+1,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
+		ENGUIN_DrawPoint(&surface,' ',x+1,y+1,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
 
 		ENGUIN_UpdateSurface(&surface);
-		ENGUIN_Delay((float)1/30);
+		ENGUIN_Delay((float)1/60);
 	}
 	ENGUIN_KillSurface(&surface);
 	return 0;

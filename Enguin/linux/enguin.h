@@ -4,6 +4,10 @@
 #include<string.h>
 #include<unistd.h>
 #include<signal.h>
+#include<ctype.h>
+#include<sys/ioctl.h>
+#include<termios.h>
+#include<fcntl.h>
 
 typedef struct{
 	int r,g,b;
@@ -31,6 +35,7 @@ void ENGUIN_StrongKill(int sig_num)
 {
     signal(SIGINT, ENGUIN_StrongKill);
 	system("tput cnorm");
+    system("stty echo");
 	system("clear");
     exit(0);
     fflush(stdout);
@@ -45,12 +50,15 @@ void ENGUIN_KillSurface(ENGUIN_Surface* s)
 	s->width = 0;
 	s->height = 0;
 	system("tput cnorm");
+    system("stty echo");
+	system("clear");
 }
 
 ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h, char c, ENGUIN_Color* back_c, ENGUIN_Color* front_c)
 {
 	printf("\e[8;%d;%dt", s_h+2, s_w*2);
 	system("tput civis");
+    system("stty -echo");
 	system("clear");
 	signal(SIGINT, ENGUIN_StrongKill);
 	ENGUIN_Surface s;
@@ -158,3 +166,52 @@ void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, ENGUIN_Color* bac
 	}
 }
 
+static struct termios old, current;
+
+void ENGUIN_UTILS_InitTermios(int echo) 
+{
+	tcgetattr(0, &old);
+	current = old;
+	current.c_lflag &= ~ICANON;
+	if(echo) {
+		current.c_lflag |= ECHO;
+	}else{
+		current.c_lflag &= ~ECHO;
+	}
+	tcsetattr(0, TCSANOW, &current);
+}
+
+void ENGUIN_UTILS_ResetTermios(void) 
+{
+	tcsetattr(0, TCSANOW, &old);
+}
+
+char ENGUIN_Getch() 
+{
+	char ch;
+	ENGUIN_UTILS_InitTermios(0);
+	ch = getchar();
+	ENGUIN_UTILS_ResetTermios();
+	return ch;
+}
+
+int ENGUIN_Kbhit(void)
+{
+	struct termios oldt, newt;
+	int ch;
+	int oldf;
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	fcntl(STDIN_FILENO, F_SETFL, oldf);
+	if(ch != EOF){
+		ungetc(ch, stdin);
+		return 1;
+	}
+	return 0;
+}

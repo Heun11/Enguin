@@ -9,7 +9,7 @@
  
 static struct termios old, current;
 
-void initTermios(int echo) 
+void ENGUIN_UTILS_InitTermios(int echo) 
 {
   tcgetattr(0, &old);
   current = old;
@@ -22,21 +22,21 @@ void initTermios(int echo)
   tcsetattr(0, TCSANOW, &current);
 }
 
-void resetTermios(void) 
+void ENGUIN_UTILS_ResetTermios(void) 
 {
   tcsetattr(0, TCSANOW, &old);
 }
 
-char getch() 
+char ENGUIN_Getch() 
 {
   char ch;
-  initTermios(0);
+  ENGUIN_UTILS_InitTermios(0);
   ch = getchar();
-  resetTermios();
+  ENGUIN_UTILS_ResetTermios();
   return ch;
 }
 
-int kbhit(void)
+int ENGUIN_Kbhit(void)
 {
   struct termios oldt, newt;
   int ch;
@@ -69,11 +69,11 @@ int main(int argc, char *argv[])
     system("stty -echo");
     char c;
     while(1){
-        if(kbhit()){
-            c = getch();
+        if(ENGUIN_Kbhit()){
+            c = ENGUIN_Getch();
             if(c=='\033'){
-                getch();
-                switch(getch()){
+                ENGUIN_Getch();
+                switch(ENGUIN_Getch()){
                     case 'A':
                         printf("Arrow up\n");
                         break;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
                 break;
             }
         }
-        usleep(1/60*1000000);
+        usleep(1/30*1000000);
     }
     system("stty echo");
     return 0;
