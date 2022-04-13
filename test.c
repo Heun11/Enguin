@@ -34,9 +34,6 @@ int main()
 		}
 
 		ENGUIN_DrawPoint(&surface,' ',x,y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
-		ENGUIN_DrawPoint(&surface,' ',x+1,y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
-		ENGUIN_DrawPoint(&surface,' ',x,y+1,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
-		ENGUIN_DrawPoint(&surface,' ',x+1,y+1,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
 
 		ENGUIN_UpdateSurface(&surface);
 		ENGUIN_Delay((float)1/60);
