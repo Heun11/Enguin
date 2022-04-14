@@ -12,31 +12,32 @@ int main()
 
 	char c;
 
-	while(1){
+	int run = 1;
+	while(run){
+
 		if(ENGUIN_Kbhit()){
 			c = ENGUIN_Getch();
-			if(c=='q'){
-				break;
-				ENGUIN_KillSurface(&surface);
+			if(c=='q'||c=='Q'){
+				run = 0;
 			}
-			else if(c=='w'){
+			else if(c=='w'||c=='W'){
 				y-=1;
 			}
-			else if(c=='s'){
+			else if(c=='s'||c=='S'){
 				y+=1;
 			}
-			else if(c=='a'){
+			else if(c=='a'||c=='A'){
 				x-=1;
 			}
-			else if(c=='d'){
+			else if(c=='d'||c=='D'){
 				x+=1;
 			}
 		}
 
-		ENGUIN_DrawPoint(&surface,' ',x,y,&((ENGUIN_Color){240,120,228}),&((ENGUIN_Color){100,130,250}));
+		ENGUIN_DrawPoint(&surface,' ',x,y,&((ENGUIN_Color){240,120,228}),NULL);
 
 		ENGUIN_UpdateSurface(&surface);
-		ENGUIN_Delay((float)1/60);
+		ENGUIN_Delay(1/10);
 	}
 	ENGUIN_KillSurface(&surface);
 	return 0;

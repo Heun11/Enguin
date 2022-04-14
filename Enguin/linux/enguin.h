@@ -33,12 +33,8 @@ typedef struct{
 
 void ENGUIN_StrongKill(int sig_num)
 {
-    signal(SIGINT, ENGUIN_StrongKill);
-	system("tput cnorm");
-    system("stty echo");
-	system("clear");
-    exit(0);
-    fflush(stdout);
+	system("reset");
+	exit(0);
 }
 
 void ENGUIN_KillSurface(ENGUIN_Surface* s)
@@ -49,16 +45,14 @@ void ENGUIN_KillSurface(ENGUIN_Surface* s)
 	s->surface2 = NULL;
 	s->width = 0;
 	s->height = 0;
-	system("tput cnorm");
-    system("stty echo");
-	system("clear");
+	ENGUIN_StrongKill(0);
 }
 
 ENGUIN_Surface ENGUIN_CreateSurface(int s_w, int s_h, char c, ENGUIN_Color* back_c, ENGUIN_Color* front_c)
 {
 	printf("\e[8;%d;%dt", s_h+2, s_w*2);
 	system("tput civis");
-    system("stty -echo");
+	system("stty -echo");
 	system("clear");
 	signal(SIGINT, ENGUIN_StrongKill);
 	ENGUIN_Surface s;
@@ -106,6 +100,7 @@ int ENGUIN_UTILS_CountDigits(int n)
 void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 {
 	int i;
+	printf("\033[uDEBUG PANEL: FPS=%f DT=%f\n", 60.0f, 0.0016f);
 	system("echo \"\x1B[0;0H\"");
 	char* str = (char*)malloc(1+(44)*sizeof(char)*s->width*s->height+s->height);
 	strcpy(str, "");
@@ -156,13 +151,16 @@ void ENGUIN_DrawPoint(ENGUIN_Surface* s, char c, int x, int y, ENGUIN_Color* bac
 {
 	if(x<s->width && y<s->height && x>=0 && y>=0){
 		(s->surface1+y*s->width+x)->ch = c;
-		(s->surface1+y*s->width+x)->back_c.r = back_c->r;
-		(s->surface1+y*s->width+x)->back_c.g = back_c->g;
-		(s->surface1+y*s->width+x)->back_c.b = back_c->b;
-
-		(s->surface1+y*s->width+x)->front_c.r = front_c->r;
-		(s->surface1+y*s->width+x)->front_c.g = front_c->g;
-		(s->surface1+y*s->width+x)->front_c.b = front_c->b;
+		if(back_c!=NULL){
+			(s->surface1+y*s->width+x)->back_c.r = back_c->r;
+			(s->surface1+y*s->width+x)->back_c.g = back_c->g;
+			(s->surface1+y*s->width+x)->back_c.b = back_c->b;
+		}
+		if(front_c!=NULL){
+			(s->surface1+y*s->width+x)->front_c.r = front_c->r;
+			(s->surface1+y*s->width+x)->front_c.g = front_c->g;
+			(s->surface1+y*s->width+x)->front_c.b = front_c->b;
+		}
 	}
 }
 
@@ -206,7 +204,7 @@ int ENGUIN_Kbhit(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
 	fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-	ch = getchar();
+	ch = ENGUIN_Getch();
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	fcntl(STDIN_FILENO, F_SETFL, oldf);
 	if(ch != EOF){
