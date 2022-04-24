@@ -49,7 +49,21 @@
 
 int main()
 {
-	ENGUIN_Surface surf = ENGUIN_CreateSurface(20,20);
-	ENGUIN_DrawSurface(&surf);
+	ENGUIN_Surface s = ENGUIN_CreateSurface(30,30);
+	ENGUIN_DrawSurface(&s);
+
+	int x = 0;
+
+	int run = 1;
+	while(run){
+		ENGUIN_DrawPoint(&s, x,29,'X');
+		x++;
+
+		ENGUIN_UpdateSurface(&s);
+		
+		ENGUIN_Delay(1);
+	}
+	ENGUIN_KillSurface(&s);
+	
 	return 0;
 }

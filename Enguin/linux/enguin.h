@@ -22,10 +22,16 @@ typedef struct{
 	int width, height;
 }ENGUIN_Surface;
 
+void ENGUIN_Delay(float seconds)
+{
+	fflush(stdout);
+	usleep((int)(seconds*1000000.0f));
+}
+
 void ENGUIN_StrongKill(int sig_num)
 {
 	system("reset");
-	exit(0);
+	_exit(0);
 }
 
 void ENGUIN_KillSurface(ENGUIN_Surface* s)
@@ -54,8 +60,8 @@ ENGUIN_Surface ENGUIN_CreateSurface(int w, int h)
 	s.cells2 = (ENGUIN_Cell*)malloc(w*h*sizeof(ENGUIN_Cell));
 
 	for(int i=0;i<(w*h);i++){
-		s.cells1[i].ch = 'c';
-		s.cells2[i].ch = 'c';
+		s.cells1[i].ch = '.';
+		s.cells2[i].ch = '.';
 	}
 	return s;
 }
@@ -68,6 +74,30 @@ void ENGUIN_DrawSurface(ENGUIN_Surface* s)
 			printf("%c%c", s->cells1[i*s->width+j].ch, s->cells1[i*s->width+j].ch);
 		}
 		printf("\n");
+	}
+}
+
+void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
+{
+	int x,y;
+	char ch;
+	for(int i=0;i<(s->width*s->height);i++){
+		if(s->cells1[i].ch != s->cells2[i].ch){
+			s->cells1[i].ch = s->cells2[i].ch;
+			//s->cells2[i].ch = '.';
+			x = i%s->width;
+			y = i/s->width;
+			ch = s->cells1[i].ch;
+			printf("\033[%d;%dH%c%c", y+1, 2*x+1, ch, ch);
+		}
+	}
+}
+
+void ENGUIN_DrawPoint(ENGUIN_Surface* s, int x, int y, char ch)
+{
+	if(x>=0&&x<s->width&&y>=0&&y<s->height && s->cells1[y*s->width+x].ch!=ch){
+		printf("\033[%d;%dH%c%c", y+1, 2*x+1, ch, ch);
+		s->cells2[y*s->width+x].ch = ch;
 	}
 }
 
