@@ -98,30 +98,32 @@
 //     return 0;
 // }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <sys/time.h>
+// #include <sys/time.h>
 
-int main ()
-{
-    struct timeval t1, t2;
-    double elapsedTime, delta;
+// int main ()
+// {
+//     struct timeval t1, t2;
+//     double elapsedTime, delta;
 
-    //start timer
-    gettimeofday(&t1, NULL);
+//     //start timer
+//     gettimeofday(&t1, NULL);
 
-    printf("debil\n");
+//     printf("debil\n");
 
-    //stop timer
-    gettimeofday(&t2, NULL);
+//     //stop timer
+//     gettimeofday(&t2, NULL);
 
-    //compute
-    elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
-    elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
+//     //compute
+//     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
+//     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
 
-    //convert to seconds
-    delta = elapsedTime /1000;
+//     //convert to seconds
+//     delta = elapsedTime /1000;
     
-    printf("%lf\n", delta);
+//     printf("%lf\n", delta);
 
-    return(0);
-}
+//     return(0);
+// }
+
