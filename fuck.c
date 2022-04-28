@@ -127,3 +127,43 @@
 //     return(0);
 // }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef struct{
+	int len;
+	char* str;
+}ENGUIN_Buffer;
+
+ENGUIN_Buffer ENGUIN_Buffer_init()
+{
+	ENGUIN_Buffer arr;
+	arr.len = 1;
+	arr.str = (char*)malloc(1);
+	arr.str[0] = '\0';
+	return arr;
+}
+
+void ENGUIN_Buffer_add(ENGUIN_Buffer* arr, char* str, int strSize)
+{
+	arr->len += strSize;
+	arr->str = (char*)realloc(arr->str, arr->len);
+	strcat(arr->str, str);
+}
+
+void ENGUIN_Buffer_pop(ENGUIN_Buffer* arr, int strSize)
+{
+	arr->len -= strSize-1;
+	arr->str = (char*)realloc(arr->str, arr->len);
+	arr->str[0] = '\0';
+}
+
+int main()
+{
+	ENGUIN_Buffer arr = ENGUIN_Buffer_init();
+	printf("%s\n", arr.str);
+	ENGUIN_Buffer_add(&arr, "debil", strlen("debil"));
+	ENGUIN_Buffer_add(&arr, "retard", strlen("retard"));
+	printf("%s %d\n", arr.str, arr.len);
+	ENGUIN_Buffer_pop(&arr, arr.len);
+	return 0;
+}
