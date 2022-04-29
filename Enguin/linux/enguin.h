@@ -17,14 +17,42 @@ typedef struct{
 }ENGUIN_Cell;
 
 typedef struct{
+	int lenght;
+	char* string;
+}ENGUIN_Buffer;
+
+typedef struct{
 	ENGUIN_Cell* cells1;
 	ENGUIN_Cell* cells2;
 	int width, height;
+	ENGUIN_Buffer buffer;
 }ENGUIN_Surface;
+
+ENGUIN_Buffer ENGUIN_BufferCreate()
+{
+	ENGUIN_Buffer buff;
+	buff.lenght = 1;
+	buff.string = (char*)malloc(buff.lenght*sizeof(char));
+	buff.string[0] = '\0';
+	return buff;
+}
+
+void ENGUIN_BufferAdd(ENGUIN_Buffer* buff, char* string, int stringSize)
+{
+	buff->lenght += stringSize;
+	buff->string = (char*)realloc(buff->string, buff->lenght);
+	strcat(buff->string, string);
+}
+
+void ENGUIN_BufferPop(ENGUIN_Buffer* buff, int stringSize)
+{
+	buff->lenght -= stringSize;
+	buff->string = (char*)realloc(buff->string, buff->lenght);
+	buff->string[buff->lenght-1] = '\0';
+}
 
 void ENGUIN_Delay(float seconds)
 {
-	//fflush(stdout);
 	usleep((int)(seconds*1000000.0f));
 }
 
@@ -58,6 +86,7 @@ ENGUIN_Surface ENGUIN_CreateSurface(int w, int h)
 	s.height = h;
 	s.cells1 = (ENGUIN_Cell*)malloc(w*h*sizeof(ENGUIN_Cell));
 	s.cells2 = (ENGUIN_Cell*)malloc(w*h*sizeof(ENGUIN_Cell));
+	s.buffer = ENGUIN_BufferCreate();
 
 	for(int i=0;i<(w*h);i++){
 		s.cells1[i].ch = '.';
@@ -66,25 +95,45 @@ ENGUIN_Surface ENGUIN_CreateSurface(int w, int h)
 	return s;
 }
 
-void ENGUIN_CursorMoveTo(int x, int y)
+int ENGUIN_UTILS_CountDigits(int n)
 {
-	printf("\033[%d;%dH", y+1, 2*x+1);
+	int c = 0;
+	while(n!=0){
+		n/=10;
+		c++;
+	}
+	return c;
 }
 
-void ENGUIN_CursorWrite(char c)
+void ENGUIN_CursorMoveTo(ENGUIN_Surface* s, int x, int y)
 {
-	printf("%c%c",c,c);
+	x = 2*x+1;
+	y = y+1;
+	//printf("\033[%d;%dH", y+1, 2*x+1);
+	int len = strlen("\033[;H")+ENGUIN_UTILS_CountDigits(x)+ENGUIN_UTILS_CountDigits(y)+1;
+	char str[len];
+	snprintf(str, len, "\033[%d;%dH", y, x);
+	ENGUIN_BufferAdd(&s->buffer, str, len);
 }
 
-void ENGUIN_CursorSetColor(int type, int color[3])
+void ENGUIN_CursorWrite(ENGUIN_Surface* s, char c)
 {
-	if(type==0){
-		printf("\033[48;2;%d;%d;%dm", color[0], color[1], color[2]);
-	}
-	if(type==1){
-		printf("\033[38;2;%d;%d;%dm", color[0], color[1], color[2]);
-	}
+	//printf("%c%c",c,c);
+	int len = 2*sizeof(char)+1;
+	char str[len];
+	snprintf(str, len, "%c%c", c, c);
+	ENGUIN_BufferAdd(&s->buffer, str, len);
 }
+
+// void ENGUIN_CursorSetColor(int type, int color[3])
+// {
+// 	if(type==0){
+// 		printf("\033[48;2;%d;%d;%dm", color[0], color[1], color[2]);
+// 	}
+// 	if(type==1){
+// 		printf("\033[38;2;%d;%d;%dm", color[0], color[1], color[2]);
+// 	}
+// }
 
 void ENGUIN_DrawSurface(ENGUIN_Surface* s)
 {
@@ -109,10 +158,10 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 			y = i/s->width;
 			ch = s->cells1[i].ch;
 
-			ENGUIN_CursorMoveTo(x,y);
+			ENGUIN_CursorMoveTo(s,x,y);
 			//ENGUIN_CursorSetColor(0, (int[]){5,20,50});
 			//ENGUIN_CursorSetColor(1, (int[]){245,125,233});
-			ENGUIN_CursorWrite(ch);
+			ENGUIN_CursorWrite(s,ch);
 		}
 
 		if(s->cells2[i].ch!='.'){
@@ -121,13 +170,14 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 
 
 	}
+	printf("%s", s->buffer.string);
 	fflush(stdout);
+	ENGUIN_BufferPop(&s->buffer, s->buffer.lenght-1);
 }
 
 void ENGUIN_DrawPoint(ENGUIN_Surface* s, int x, int y, char ch)
 {
 	if(x>=0&&x<s->width&&y>=0&&y<s->height){
-		//printf("\033[%d;%dH%c%c", y+1, 2*x+1, ch, ch);
 		s->cells2[y*s->width+x].ch = ch;
 	}
 }
