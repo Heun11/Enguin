@@ -37,9 +37,9 @@ ENGUIN_Buffer ENGUIN_BufferCreate()
 	return buff;
 }
 
-void ENGUIN_BufferAdd(ENGUIN_Buffer* buff, char* string, int stringSize)
+void ENGUIN_BufferAdd(ENGUIN_Buffer* buff, char* string)
 {
-	buff->lenght += stringSize;
+	buff->lenght += strlen(string);
 	buff->string = (char*)realloc(buff->string, buff->lenght);
 	strcat(buff->string, string);
 }
@@ -113,7 +113,7 @@ void ENGUIN_CursorMoveTo(ENGUIN_Surface* s, int x, int y)
 	int len = strlen("\033[;H")+ENGUIN_UTILS_CountDigits(x)+ENGUIN_UTILS_CountDigits(y)+1;
 	char str[len];
 	snprintf(str, len, "\033[%d;%dH", y, x);
-	ENGUIN_BufferAdd(&s->buffer, str, len);
+	ENGUIN_BufferAdd(&s->buffer, str);
 }
 
 void ENGUIN_CursorWrite(ENGUIN_Surface* s, char c)
@@ -122,7 +122,7 @@ void ENGUIN_CursorWrite(ENGUIN_Surface* s, char c)
 	int len = 2*sizeof(char)+1;
 	char str[len];
 	snprintf(str, len, "%c%c", c, c);
-	ENGUIN_BufferAdd(&s->buffer, str, len);
+	ENGUIN_BufferAdd(&s->buffer, str);
 }
 
 // void ENGUIN_CursorSetColor(int type, int color[3])
@@ -167,9 +167,8 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 		if(s->cells2[i].ch!='.'){
 			s->cells2[i].ch = '.';
 		}
-
-
 	}
+
 	printf("%s", s->buffer.string);
 	fflush(stdout);
 	ENGUIN_BufferPop(&s->buffer, s->buffer.lenght-1);

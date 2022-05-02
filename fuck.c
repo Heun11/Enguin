@@ -129,42 +129,94 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef struct{
-	int len;
-	char* str;
-}ENGUIN_Buffer;
+// typedef struct{
+// 	int len;
+// 	char* str;
+// }ENGUIN_Buffer;
 
-ENGUIN_Buffer ENGUIN_Buffer_init()
+// ENGUIN_Buffer ENGUIN_Buffer_init()
+// {
+// 	ENGUIN_Buffer arr;
+// 	arr.len = 1;
+// 	arr.str = (char*)malloc(1);
+// 	arr.str[0] = '\0';
+// 	return arr;
+// }
+
+// void ENGUIN_Buffer_add(ENGUIN_Buffer* arr, char* str, int strSize)
+// {
+// 	arr->len += strSize;
+// 	arr->str = (char*)realloc(arr->str, arr->len);
+// 	strcat(arr->str, str);
+// }
+
+// void ENGUIN_Buffer_pop(ENGUIN_Buffer* arr, int strSize)
+// {
+// 	arr->len -= strSize;
+// 	arr->str = (char*)realloc(arr->str, arr->len);
+// 	arr->str[arr->len-1] = '\0';
+// }
+
+// int main()
+// {
+// 	ENGUIN_Buffer arr = ENGUIN_Buffer_init();
+// 	printf("%s %d\n", arr.str, arr.len);
+// 	ENGUIN_Buffer_add(&arr, "debil", strlen("debil"));
+// 	ENGUIN_Buffer_add(&arr, "retard", strlen("retard"));
+// 	printf("%s %d\n", arr.str, arr.len);
+// 	ENGUIN_Buffer_pop(&arr, 6);
+// 	printf("%s %d\n", arr.str, arr.len);
+// 	return 0;
+// }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//TODO -> array of strings (dynamic) **fuck
+
+char* init(int size, int maxLength)
 {
-	ENGUIN_Buffer arr;
-	arr.len = 1;
-	arr.str = (char*)malloc(1);
-	arr.str[0] = '\0';
-	return arr;
+	char* buff = (char*)malloc(size*maxLength*sizeof(char));
+	for(int i=0;i<size;i++){
+		*(buff+i*maxLength) = '\0';
+	}
+	return buff;
 }
 
-void ENGUIN_Buffer_add(ENGUIN_Buffer* arr, char* str, int strSize)
+char* getById(char* buff, int maxLength, int id)
 {
-	arr->len += strSize;
-	arr->str = (char*)realloc(arr->str, arr->len);
-	strcat(arr->str, str);
+	return buff+id*maxLength;
 }
 
-void ENGUIN_Buffer_pop(ENGUIN_Buffer* arr, int strSize)
+void setById(char* buff, int maxLength, int id, char* str)
 {
-	arr->len -= strSize;
-	arr->str = (char*)realloc(arr->str, arr->len);
-	arr->str[arr->len-1] = '\0';
+	int i;
+	if(strlen(str)<=maxLength){
+		for(i=0;i<maxLength;i++){
+			if(i<=strlen(str)){
+				*(buff+id*maxLength+i) = *(str+i);
+			}
+			else{
+				*(buff+id*maxLength+i) = ' ';
+			}
+		}
+	}
 }
 
-int main()
+int main(int argc, char const *argv[])
 {
-	ENGUIN_Buffer arr = ENGUIN_Buffer_init();
-	printf("%s %d\n", arr.str, arr.len);
-	ENGUIN_Buffer_add(&arr, "debil", strlen("debil"));
-	ENGUIN_Buffer_add(&arr, "retard", strlen("retard"));
-	printf("%s %d\n", arr.str, arr.len);
-	ENGUIN_Buffer_pop(&arr, 6);
-	printf("%s %d\n", arr.str, arr.len);
+	int size = 3;
+	int maxLength = 9;
+	char* test = init(size, maxLength);
+
+	setById(test, maxLength, 0, "debil");
+	setById(test, maxLength, 1, "retard");
+	setById(test, maxLength, 2, "autik");
+
+	setById(test, maxLength, 2, "hlupak");
+
+	for(int i=0;i<size;i++){
+		printf("%s\n", getById(test, maxLength, i));
+	}
 	return 0;
 }

@@ -71,9 +71,9 @@ int main()
 
 		ENGUIN_UpdateSurface(&s);
 		
-		ENGUIN_Delay(1/120);
+		ENGUIN_Delay(1/30);
 	}
 	ENGUIN_KillSurface(&s);
 	
 	return 0;
-}
+

@@ -99,23 +99,28 @@ void CircleDraw(ENGUIN_Surface* s, int x0, int y0, int radius)
 
 int main()
 {
-    ENGUIN_Surface s = ENGUIN_CreateSurface(50,50);
+    ENGUIN_Surface s = ENGUIN_CreateSurface(127,127);
     ENGUIN_DrawSurface(&s);
 
-    // float x = 0.0f;
+    float r = 0;
 
     int run = 1;
     while(run){
-        CircleDraw(&s, 24,24,20);
+        // CircleDraw(&s, 63,63,r);
+        // CircleDraw(&s, 63,63,r-4);
+        // CircleDraw(&s, 63,63,r-8);
 
-        // for(int i=0;i<128*128;i++){
-        //     ENGUIN_DrawPoint(&s, (int)x, i/128, 'X');
-        // }
+        for(int i=0;i<10*4;i+=4){
+            CircleDraw(&s, 63,63,r-i);
+        }
 
-        // x+=0.001f;
+        r+=0.001f;
+        if(r-10*4>63){
+            r=0;
+        }
 
         ENGUIN_UpdateSurface(&s);        
-        ENGUIN_Delay(1/30);
+        // ENGUIN_Delay(1/5);
     }
     ENGUIN_KillSurface(&s);
 
