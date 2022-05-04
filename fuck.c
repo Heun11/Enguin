@@ -174,30 +174,39 @@
 
 //TODO -> array of strings (dynamic) **fuck
 
-char* init(int size, int maxLength)
+typedef struct{
+	int size;
+	int maxLength;
+	char* string;
+}ENGUIN_Buffer;
+
+ENGUIN_Buffer ENGUIN_BufferInit(int size, int maxLength)
 {
-	char* buff = (char*)malloc(size*maxLength*sizeof(char));
+	ENGUIN_Buffer buff;
+	buff.size = size;
+	buff.maxLength = maxLength;
+	buff.string = (char*)malloc(size*maxLength*sizeof(char));
 	for(int i=0;i<size;i++){
-		*(buff+i*maxLength) = '\0';
+		*(buff.string+i*maxLength) = '\0';
 	}
 	return buff;
 }
 
-char* getById(char* buff, int maxLength, int id)
+char* ENGUIN_BufferGet(ENGUIN_Buffer* buff, int id)
 {
-	return buff+id*maxLength;
+	return buff->string+id*buff->maxLength;
 }
 
-void setById(char* buff, int maxLength, int id, char* str)
+void ENGUIN_BufferSet(ENGUIN_Buffer* buff, int id, char* str)
 {
 	int i;
-	if(strlen(str)<=maxLength){
-		for(i=0;i<maxLength;i++){
+	if(strlen(str)<=buff->maxLength){
+		for(i=0;i<buff->maxLength;i++){
 			if(i<=strlen(str)){
-				*(buff+id*maxLength+i) = *(str+i);
+				*(buff->string+id*buff->maxLength+i) = *(str+i);
 			}
 			else{
-				*(buff+id*maxLength+i) = ' ';
+				*(buff->string+id*buff->maxLength+i) = ' ';
 			}
 		}
 	}
@@ -205,18 +214,16 @@ void setById(char* buff, int maxLength, int id, char* str)
 
 int main(int argc, char const *argv[])
 {
-	int size = 3;
-	int maxLength = 9;
-	char* test = init(size, maxLength);
+	ENGUIN_Buffer test = ENGUIN_BufferInit(3, 9);
 
-	setById(test, maxLength, 0, "debil");
-	setById(test, maxLength, 1, "retard");
-	setById(test, maxLength, 2, "autik");
+	ENGUIN_BufferSet(&test, 0, "debil");
+	ENGUIN_BufferSet(&test, 1, "retard");
+	ENGUIN_BufferSet(&test, 2, "autik");
 
-	setById(test, maxLength, 2, "hlupak");
+	ENGUIN_BufferSet(&test, 2, "hlupak");
 
-	for(int i=0;i<size;i++){
-		printf("%s\n", getById(test, maxLength, i));
+	for(int i=0;i<test.size;i++){
+		printf("%s\n", ENGUIN_BufferGet(&test, i));
 	}
 	return 0;
 }
