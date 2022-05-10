@@ -1,0 +1,4 @@
+char* debil()
+{
+	return "debil";
+}

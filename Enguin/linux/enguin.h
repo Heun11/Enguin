@@ -198,13 +198,14 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 	// }
 
 	char* payload = (char*)malloc(s->width*s->height*(strlen("\033[;HCC")+ENGUIN_UTILS_CountDigits(s->width)+ENGUIN_UTILS_CountDigits(s->height))+1);
+	payload[0] = '\0';
 	char* cellStr = (char*)malloc(strlen("\033[;HCC")+ENGUIN_UTILS_CountDigits(s->width)+ENGUIN_UTILS_CountDigits(s->height)+1);
 
 	for(int i=0;i<s->width*s->height;i++){
 		if(s->cells[i].modified){
 			s->cells[i].modified = 0;
 			cellStr = ENGUIN_CellToString(s, i);
-			if(!(strcmp(cellStr, ENGUIN_BufferGet(&s->lastFrame, i)))){
+			if((strcmp(cellStr, ENGUIN_BufferGet(&s->lastFrame, i)))>0){
 				ENGUIN_BufferSet(&s->lastFrame, i, cellStr);
 				strcat(payload, cellStr);
 			}
@@ -212,21 +213,17 @@ void ENGUIN_UpdateSurface(ENGUIN_Surface* s)
 	}
 
 	// TODO -> Problem s payload
-	// printf("%s ", payload);
-	printf("%s", cellStr);
+	printf("%s", payload);
+	// printf("%s", cellStr);
 	fflush(stdout);
 
 	free(payload);
 	free(cellStr);
 }
 
-// void ENGUIN_DrawPoint(ENGUIN_Surface* s, int x, int y, char ch)
-// {
-// 	if(x>=0&&x<s->width&&y>=0&&y<s->height){
-// 		// char str[3];
-// 		// snprintf(str, 3, "%c%c", ch, ch);
-// 		ENGUIN_CursorMoveTo(s, x, y);
-// 		ENGUIN_CursorWrite(s, "DD");
-// 	}
-// }
+void ENGUIN_DrawPoint(ENGUIN_Surface* s, int x, int y, char ch)
+{
+	ENGUIN_CursorMoveTo(s, x, y);
+	ENGUIN_CursorWrite(s, ch);
+}
 

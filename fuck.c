@@ -225,5 +225,8 @@ int main(int argc, char const *argv[])
 	for(int i=0;i<test.size;i++){
 		printf("%s\n", ENGUIN_BufferGet(&test, i));
 	}
+
+	printf("%d", strcmp(ENGUIN_BufferGet(&test, 0), "debil"));
+
 	return 0;
 }

@@ -69,12 +69,16 @@ int main()
 		// 	x+=0.0001;
 		// }
 
-		ENGUIN_CursorMoveTo(&s, 3, 2);
-		ENGUIN_CursorWrite(&s, 'D');
+		ENGUIN_CursorMoveTo(&s, x, 2);
+		ENGUIN_CursorWrite(&s, 'C');
+		
+		if(x<26){
+			x+=0.0001;
+		}
 
 		ENGUIN_UpdateSurface(&s);
 		
-		ENGUIN_Delay(1);
+		ENGUIN_Delay(1/30);
 	}
 	ENGUIN_KillSurface(&s);
 	
