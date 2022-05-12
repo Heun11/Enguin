@@ -1,0 +1,9 @@
+project struct:
+
+Enguin:
+	->platformApi:
+		->linux
+		->widnows
+		->mac
+	->engine:
+		->shared code for all platforms
