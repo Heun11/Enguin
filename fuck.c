@@ -174,59 +174,79 @@
 
 //TODO -> array of strings (dynamic) **fuck
 
-typedef struct{
-	int size;
-	int maxLength;
-	char* string;
-}ENGUIN_Buffer;
+// typedef struct{
+// 	int size;
+// 	int maxLength;
+// 	char* string;
+// }ENGUIN_Buffer;
 
-ENGUIN_Buffer ENGUIN_BufferInit(int size, int maxLength)
+// ENGUIN_Buffer ENGUIN_BufferInit(int size, int maxLength)
+// {
+// 	ENGUIN_Buffer buff;
+// 	buff.size = size;
+// 	buff.maxLength = maxLength;
+// 	buff.string = (char*)malloc(size*maxLength*sizeof(char));
+// 	for(int i=0;i<size;i++){
+// 		*(buff.string+i*maxLength) = '\0';
+// 	}
+// 	return buff;
+// }
+
+// char* ENGUIN_BufferGet(ENGUIN_Buffer* buff, int id)
+// {
+// 	return buff->string+id*buff->maxLength;
+// }
+
+// void ENGUIN_BufferSet(ENGUIN_Buffer* buff, int id, char* str)
+// {
+// 	int i;
+// 	if(strlen(str)<=buff->maxLength){
+// 		for(i=0;i<buff->maxLength;i++){
+// 			if(i<=strlen(str)){
+// 				*(buff->string+id*buff->maxLength+i) = *(str+i);
+// 			}
+// 			else{
+// 				*(buff->string+id*buff->maxLength+i) = ' ';
+// 			}
+// 		}
+// 	}
+// }
+
+// int main(int argc, char const *argv[])
+// {
+// 	ENGUIN_Buffer test = ENGUIN_BufferInit(3, 9);
+
+// 	ENGUIN_BufferSet(&test, 0, "debil");
+// 	ENGUIN_BufferSet(&test, 1, "retard");
+// 	ENGUIN_BufferSet(&test, 2, "autik");
+
+// 	ENGUIN_BufferSet(&test, 2, "hlupak");
+
+// 	for(int i=0;i<test.size;i++){
+// 		printf("%s\n", ENGUIN_BufferGet(&test, i));
+// 	}
+
+// 	printf("%d", strcmp(ENGUIN_BufferGet(&test, 0), "debil"));
+
+// 	return 0;
+// }
+
+
+
+
+
+//////////////////////////////////////////////////////
+
+
+#include"Enguin/test.h"
+
+int main()
 {
-	ENGUIN_Buffer buff;
-	buff.size = size;
-	buff.maxLength = maxLength;
-	buff.string = (char*)malloc(size*maxLength*sizeof(char));
-	for(int i=0;i<size;i++){
-		*(buff.string+i*maxLength) = '\0';
-	}
-	return buff;
-}
-
-char* ENGUIN_BufferGet(ENGUIN_Buffer* buff, int id)
-{
-	return buff->string+id*buff->maxLength;
-}
-
-void ENGUIN_BufferSet(ENGUIN_Buffer* buff, int id, char* str)
-{
-	int i;
-	if(strlen(str)<=buff->maxLength){
-		for(i=0;i<buff->maxLength;i++){
-			if(i<=strlen(str)){
-				*(buff->string+id*buff->maxLength+i) = *(str+i);
-			}
-			else{
-				*(buff->string+id*buff->maxLength+i) = ' ';
-			}
-		}
-	}
-}
-
-int main(int argc, char const *argv[])
-{
-	ENGUIN_Buffer test = ENGUIN_BufferInit(3, 9);
-
-	ENGUIN_BufferSet(&test, 0, "debil");
-	ENGUIN_BufferSet(&test, 1, "retard");
-	ENGUIN_BufferSet(&test, 2, "autik");
-
-	ENGUIN_BufferSet(&test, 2, "hlupak");
-
-	for(int i=0;i<test.size;i++){
-		printf("%s\n", ENGUIN_BufferGet(&test, i));
-	}
-
-	printf("%d", strcmp(ENGUIN_BufferGet(&test, 0), "debil"));
-
+	EnguinApi_Cell c = EnguinApi_Cell_Create('c', 10,10);
+	char* str;
+	str = EnguinApi_Cell_ToString(&c);
+	printf("%s", str);
+	EnguinApi_Cell_Reset(&c);
+	printf("%s", str);
 	return 0;
 }

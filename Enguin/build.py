@@ -1,7 +1,7 @@
 import os, sys
 
 CC = "gcc"
-LIBNAME = "debil"
+LIBNAME = "Enguin"
 
 #TODO->clean each .o file in each dir
 def clean(dir_):

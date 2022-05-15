@@ -1,3 +1,3 @@
-#ifndef WIN_32
+#ifndef _WIN32
 #include"linux/linux.h"
 #endif

@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include"debil/debil.h"
+#include"debil/string/string.h"
 
 int main()
 {
