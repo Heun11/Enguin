@@ -239,14 +239,21 @@
 
 
 #include"Enguin/test.h"
+#include<time.h>
 
 int main()
 {
-	EnguinApi_Cell c = EnguinApi_Cell_Create('c', 10,10);
-	char* str;
-	str = EnguinApi_Cell_ToString(&c);
-	printf("%s", str);
-	EnguinApi_Cell_Reset(&c);
-	printf("%s", str);
+	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
+	srand(time(0));
+	char str[2];
+	while(1){
+		for(int i=0;i<60*30;i++){
+			EnguinApi_Canvas_MoveTo(&canvas, i%60, i/60);
+			snprintf(str, 2, "%c", (char)(rand()%(126-33+1))+33);
+			EnguinApi_Canvas_Write(&canvas, str);
+		}
+		EnguinApi_Canvas_Flush(&canvas);
+		usleep(100000);
+	}
 	return 0;
 }
