@@ -244,16 +244,22 @@
 int main()
 {
 	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
-	srand(time(0));
-	char str[2];
+	char ch = 'A';
 	while(1){
-		for(int i=0;i<60*30;i++){
-			EnguinApi_Canvas_MoveTo(&canvas, i%60, i/60);
-			snprintf(str, 2, "%c", (char)(rand()%(126-33+1))+33);
-			EnguinApi_Canvas_Write(&canvas, str);
+		for(int i=0;i<60;i++){
+			for(int j=0;j<30;j++){
+				EnguinApi_Canvas_MoveTo(&canvas, i, j);
+				canvas.cells[j*60+i].ch = ch;
+				canvas.cells[j*60+i].isModified = 1;
+			}
 		}
+		if(ch>122){
+			ch = 'A';
+		}
+		ch++;
 		EnguinApi_Canvas_Flush(&canvas);
-		usleep(100000);
+
+		usleep(16666);
 	}
 	return 0;
 }

@@ -62,12 +62,11 @@ void EnguinApi_Canvas_Flush(EnguinApi_Canvas* canvas)
 			canvas->cells[i].isModified = 0;
 			cellStr = EnguinApi_Cell_ToString(&canvas->cells[i]);
 			fromBuff = EnguinApi_Utils_Buffer_Get(&canvas->lastFrame, i);
-			if((strcmp(cellStr, fromBuff))>0){
+			if((strcmp(cellStr, fromBuff))!=0){
 				EnguinApi_Utils_Buffer_Set(&canvas->lastFrame, i, cellStr);
 				strcat(payload, cellStr);
 			}
 			free(cellStr);
-			cellStr = NULL;
 		}
 	}
 	printf("%s", payload);
