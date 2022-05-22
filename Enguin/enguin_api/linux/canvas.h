@@ -15,8 +15,12 @@ typedef struct{
 	int background[3];
 }EnguinApi_Cell;
 
-EnguinApi_Cell EnguinApi_Cell_Create(char, int, int);
+EnguinApi_Cell EnguinApi_Cell_Create(char, int, int, int[3], int[3]);
 void EnguinApi_Cell_Reset(EnguinApi_Cell*);
+void EnguinApi_Cell_SetForeground(EnguinApi_Cell*, int[3]);
+void EnguinApi_Cell_ResetForeground(EnguinApi_Cell*);
+void EnguinApi_Cell_SetBackground(EnguinApi_Cell*, int[3]);
+void EnguinApi_Cell_ResetBackground(EnguinApi_Cell*);
 char* EnguinApi_Cell_ToString(EnguinApi_Cell*);
 
 //Canvas
@@ -27,7 +31,7 @@ typedef struct{
 	int cursorX, cursorY;
 }EnguinApi_Canvas;
 
-EnguinApi_Canvas EnguinApi_Canvas_Create(int,int);
+EnguinApi_Canvas EnguinApi_Canvas_Create(int, int);
 void EnguinApi_Canvas_Write(EnguinApi_Canvas*, char*);
 void EnguinApi_Canvas_Flush(EnguinApi_Canvas*);
 void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas*, int, int);

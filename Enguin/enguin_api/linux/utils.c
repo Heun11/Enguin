@@ -1,5 +1,14 @@
 #include"utils.h"
 
+int EnguinApi_Utils_RandomNumber(int start, int stop)
+{
+	if(SRAND_CALL!=-1){
+		srand(time(0));
+		SRAND_CALL = -1;
+	}
+	return (rand()%(stop-start+1))+start;
+}
+
 int EnguinApi_Utils_CountDigits(int n)
 {
 	int c = 0;

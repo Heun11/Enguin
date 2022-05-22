@@ -4,7 +4,11 @@
 
 #include<stdlib.h>
 #include<string.h>
+#include<time.h>
 
+int SRAND_CALL;
+
+int EnguinApi_Utils_RandomNumber(int, int);
 int EnguinApi_Utils_CountDigits(int);
 
 typedef struct{

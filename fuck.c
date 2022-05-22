@@ -238,28 +238,72 @@
 //////////////////////////////////////////////////////
 
 
+// int main ()
+// {
+//     struct timeval t1, t2;
+//     double elapsedTime, delta;
+
+//     //start timer
+//     gettimeofday(&t1, NULL);
+
+//     printf("debil\n");
+
+//     //stop timer
+//     gettimeofday(&t2, NULL);
+
+//     //compute
+//     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
+//     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
+
+//     //convert to seconds
+//     delta = elapsedTime /1000;
+    
+//     printf("%lf\n", delta);
+
+//     return(0);
+// }
+
+
 #include"Enguin/test.h"
+#include<sys/time.h>
 #include<time.h>
 
 int main()
 {
+	struct timeval t1, t2;
+	double elapsedTime, delta;
+	char deltaStr[20] = "debil";
+	srand(time(0));
+
 	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
-	char ch = 'A';
 	while(1){
+
+		gettimeofday(&t1, NULL);
+		
 		for(int i=0;i<60;i++){
-			for(int j=0;j<30;j++){
+			for(int j=0;j<29;j++){
 				EnguinApi_Canvas_MoveTo(&canvas, i, j);
-				canvas.cells[j*60+i].ch = ch;
+				canvas.cells[j*60+i].ch = EnguinApi_Utils_RandomNumber(33, 126);
 				canvas.cells[j*60+i].isModified = 1;
 			}
 		}
-		if(ch>122){
-			ch = 'A';
-		}
-		ch++;
 		EnguinApi_Canvas_Flush(&canvas);
 
+		snprintf(deltaStr, 20, "%lf", (1/delta));
+		EnguinApi_Canvas_MoveTo(&canvas, 0, 29);
+		EnguinApi_Canvas_Write(&canvas, deltaStr);
+		
 		usleep(16666);
+		
+		gettimeofday(&t2, NULL);
+
+		elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
+		elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
+
+		delta = elapsedTime/1000;
+
+		//EnguinApi_Canvas_Flush(&canvas);
+
 	}
 	return 0;
 }

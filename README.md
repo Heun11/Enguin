@@ -5,8 +5,7 @@ docs:
 - Linux(Debian):
 	1. download Enguin folder
 	2. use as in docs
-	3. compile: make
-	4. run: sudo ./name
+	3. run: ./name
 
 - Windows:
-	1. Fuck off
+	1. Not yet :(
