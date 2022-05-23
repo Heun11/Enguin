@@ -35,4 +35,5 @@ EnguinApi_Canvas EnguinApi_Canvas_Create(int, int);
 void EnguinApi_Canvas_Write(EnguinApi_Canvas*, char*);
 void EnguinApi_Canvas_Flush(EnguinApi_Canvas*);
 void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas*, int, int);
+
 #endif

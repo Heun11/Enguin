@@ -20,4 +20,5 @@ typedef struct{
 EnguinApi_Utils_Buffer EnguinApi_Utils_Buffer_Create(int, int);
 char* EnguinApi_Utils_Buffer_Get(EnguinApi_Utils_Buffer*, int);
 void EnguinApi_Utils_Buffer_Set(EnguinApi_Utils_Buffer*, int, char*);
+
 #endif
