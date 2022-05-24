@@ -2,14 +2,18 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include<stdio.h>
+
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+#include<unistd.h>
 
 int SRAND_CALL;
 
 int EnguinApi_Utils_RandomNumber(int, int);
 int EnguinApi_Utils_CountDigits(int);
+void EnguinApi_Utils_Sleep(float);
 
 typedef struct{
 	int size;

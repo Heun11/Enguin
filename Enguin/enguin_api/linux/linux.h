@@ -4,5 +4,6 @@
 
 #include"utils.h"
 #include"canvas.h"
+#include"input.h"
 
 #endif
