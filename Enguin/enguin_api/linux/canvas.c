@@ -43,10 +43,10 @@ void EnguinApi_Cell_Reset(EnguinApi_Cell* cell)
 
 char* EnguinApi_Cell_ToString(EnguinApi_Cell* cell)
 {
-	int len = strlen("\033[;HC")+EnguinApi_Utils_CountDigits(cell->x+1)+EnguinApi_Utils_CountDigits(cell->y+1)+
-		strlen("\033[48;2;255;255;255m")+strlen("\033[38;2;255;255;255m")+1;
+	int len = strlen("\x1b[;HC")+EnguinApi_Utils_CountDigits(cell->x+1)+EnguinApi_Utils_CountDigits(cell->y+1)+
+		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m")+1;
 	char* str = (char*)malloc(len*sizeof(char));
-	snprintf(str, len, "\033[%d;%dH\033[38;2;%d;%d;%dm\033[48;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
+	snprintf(str, len, "\x1b[%d;%dH\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
 		cell->foreground[0], cell->foreground[1], cell->foreground[2], 
 		cell->background[0], cell->background[1], cell->background[2], cell->ch);
 	return str;
@@ -57,8 +57,8 @@ EnguinApi_Canvas EnguinApi_Canvas_Create(int width, int height)
 {
 	EnguinApi_Canvas canvas = {.width=width, .height=height, .cursorX=0, .cursorY=0};
 	canvas.cells = (EnguinApi_Cell*)malloc(width*height*sizeof(EnguinApi_Cell));
-	int maxLength = strlen("\033[;HC")+EnguinApi_Utils_CountDigits(width)+EnguinApi_Utils_CountDigits(height)+
-		strlen("\033[48;2;255;255;255m")+strlen("\033[38;2;255;255;255m")+1;
+	int maxLength = strlen("\x1b[;HC")+EnguinApi_Utils_CountDigits(width)+EnguinApi_Utils_CountDigits(height)+
+		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m")+1;
 	canvas.lastFrame = EnguinApi_Utils_Buffer_Create(width*height, maxLength);
 	for(int i=0;i<width*height;i++){
 		canvas.cells[i] = EnguinApi_Cell_Create(' ', i%width, i/width, (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
@@ -83,9 +83,9 @@ void EnguinApi_Canvas_Write(EnguinApi_Canvas* canvas, char* str)
 
 void EnguinApi_Canvas_Flush(EnguinApi_Canvas* canvas)
 {
-	char* payload = (char*)malloc(canvas->width*canvas->height*(strlen("\033[;HC")+
+	char* payload = (char*)malloc(canvas->width*canvas->height*(strlen("\x1b[;HC")+
 		EnguinApi_Utils_CountDigits(canvas->width)+EnguinApi_Utils_CountDigits(canvas->height)+
-		strlen("\033[48;2;255;255;255m")+strlen("\033[38;2;255;255;255m"))+1);
+		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m"))+1);
 	payload[0] = '\0';
 	char* cellStr;
 	char* fromBuff;

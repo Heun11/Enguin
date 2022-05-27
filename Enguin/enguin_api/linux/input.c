@@ -51,4 +51,43 @@ int EnguinApi_Input_Kbhit(void)
 	return 0;
 }
 
+int EnguinApi_Input_KeyPressed()
+{
+	int keycode = 0;
+	char c;
+
+	if(EnguinApi_Input_Kbhit()){
+		c = EnguinApi_Input_Getch();
+		if(c=='\033'){
+			if(EnguinApi_Input_Kbhit()){
+				EnguinApi_Input_Getch();
+				c = EnguinApi_Input_Getch();
+				switch(c){
+		 			case 'A':
+						keycode = KEY_UP;
+						break;
+					case 'B':
+						keycode = KEY_DOWN;
+						break;
+					case 'C':
+						keycode = KEY_RIGHT;
+						break;
+					case 'D':
+						keycode = KEY_LEFT;
+						break;
+					default:
+						keycode = 0;
+		 		}
+
+			}
+			else{
+				keycode = KEY_ESC;
+			}
+		}
+		else{
+			keycode = (int)c;
+		}
+	}
+	return keycode;
+}
 

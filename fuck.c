@@ -273,7 +273,7 @@ int main()
 	struct timeval t1, t2;
 	double elapsedTime, delta;
 	char deltaStr[20] = "debil";
-	char ch;
+	int ch;
 	srand(time(0));
 
 	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
@@ -287,14 +287,38 @@ int main()
 		//		canvas.cells[j*60+i].ch = EnguinApi_Utils_RandomNumber(33, 126);
 		//		canvas.cells[j*60+i].isModified = 1;
 		//	}
-		/}
+		//}
+	
+		//TODO -> kbhit skusit po ESC, ci je tam este nieco
 
-		if(EnguinApi_Input_Kbhit()){
-			ch = EnguinApi_Input_Getch();
-			if(ch=='q'||ch=='Q'){
-				break;
-			}
+		// if(EnguinApi_Input_Kbhit()){
+		// 	ch = EnguinApi_Input_Getch();
+		// 	if(ch=='\033'){
+		// 		if(EnguinApi_Input_Kbhit()){
+		// 			EnguinApi_Canvas_MoveTo(&canvas, 0,1);
+		// 			EnguinApi_Canvas_Write(&canvas, "ESC and something");
+		// 			break;
+		// 		}
+		// 		else{
+		// 			EnguinApi_Canvas_MoveTo(&canvas, 0,0);
+		// 			EnguinApi_Canvas_Write(&canvas, "ESC");
+		// 		}
+		// 	}
+		// 	else if(ch=='q'||ch=='Q'){
+		// 		break;
+		// 	}
+		// }
+
+		ch = EnguinApi_Input_KeyPressed();
+
+		if(ch==KEY_UP){
+			EnguinApi_Canvas_MoveTo(&canvas, 0,0);
+			EnguinApi_Canvas_Write(&canvas, "debil");
 		}
+		else if(ch=='q'){
+			break;
+		}
+
 
 		EnguinApi_Canvas_Flush(&canvas);
 
@@ -317,3 +341,4 @@ int main()
 	}
 	return 0;
 }
+
