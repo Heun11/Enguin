@@ -100,144 +100,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// #include <sys/time.h>
-
-// int main ()
-// {
-//     struct timeval t1, t2;
-//     double elapsedTime, delta;
-
-//     //start timer
-//     gettimeofday(&t1, NULL);
-
-//     printf("debil\n");
-
-//     //stop timer
-//     gettimeofday(&t2, NULL);
-
-//     //compute
-//     elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;
-//     elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
-
-//     //convert to seconds
-//     delta = elapsedTime /1000;
-    
-//     printf("%lf\n", delta);
-
-//     return(0);
-// }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// typedef struct{
-// 	int len;
-// 	char* str;
-// }ENGUIN_Buffer;
-
-// ENGUIN_Buffer ENGUIN_Buffer_init()
-// {
-// 	ENGUIN_Buffer arr;
-// 	arr.len = 1;
-// 	arr.str = (char*)malloc(1);
-// 	arr.str[0] = '\0';
-// 	return arr;
-// }
-
-// void ENGUIN_Buffer_add(ENGUIN_Buffer* arr, char* str, int strSize)
-// {
-// 	arr->len += strSize;
-// 	arr->str = (char*)realloc(arr->str, arr->len);
-// 	strcat(arr->str, str);
-// }
-
-// void ENGUIN_Buffer_pop(ENGUIN_Buffer* arr, int strSize)
-// {
-// 	arr->len -= strSize;
-// 	arr->str = (char*)realloc(arr->str, arr->len);
-// 	arr->str[arr->len-1] = '\0';
-// }
-
-// int main()
-// {
-// 	ENGUIN_Buffer arr = ENGUIN_Buffer_init();
-// 	printf("%s %d\n", arr.str, arr.len);
-// 	ENGUIN_Buffer_add(&arr, "debil", strlen("debil"));
-// 	ENGUIN_Buffer_add(&arr, "retard", strlen("retard"));
-// 	printf("%s %d\n", arr.str, arr.len);
-// 	ENGUIN_Buffer_pop(&arr, 6);
-// 	printf("%s %d\n", arr.str, arr.len);
-// 	return 0;
-// }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//TODO -> array of strings (dynamic) **fuck
-
-// typedef struct{
-// 	int size;
-// 	int maxLength;
-// 	char* string;
-// }ENGUIN_Buffer;
-
-// ENGUIN_Buffer ENGUIN_BufferInit(int size, int maxLength)
-// {
-// 	ENGUIN_Buffer buff;
-// 	buff.size = size;
-// 	buff.maxLength = maxLength;
-// 	buff.string = (char*)malloc(size*maxLength*sizeof(char));
-// 	for(int i=0;i<size;i++){
-// 		*(buff.string+i*maxLength) = '\0';
-// 	}
-// 	return buff;
-// }
-
-// char* ENGUIN_BufferGet(ENGUIN_Buffer* buff, int id)
-// {
-// 	return buff->string+id*buff->maxLength;
-// }
-
-// void ENGUIN_BufferSet(ENGUIN_Buffer* buff, int id, char* str)
-// {
-// 	int i;
-// 	if(strlen(str)<=buff->maxLength){
-// 		for(i=0;i<buff->maxLength;i++){
-// 			if(i<=strlen(str)){
-// 				*(buff->string+id*buff->maxLength+i) = *(str+i);
-// 			}
-// 			else{
-// 				*(buff->string+id*buff->maxLength+i) = ' ';
-// 			}
-// 		}
-// 	}
-// }
-
-// int main(int argc, char const *argv[])
-// {
-// 	ENGUIN_Buffer test = ENGUIN_BufferInit(3, 9);
-
-// 	ENGUIN_BufferSet(&test, 0, "debil");
-// 	ENGUIN_BufferSet(&test, 1, "retard");
-// 	ENGUIN_BufferSet(&test, 2, "autik");
-
-// 	ENGUIN_BufferSet(&test, 2, "hlupak");
-
-// 	for(int i=0;i<test.size;i++){
-// 		printf("%s\n", ENGUIN_BufferGet(&test, i));
-// 	}
-
-// 	printf("%d", strcmp(ENGUIN_BufferGet(&test, 0), "debil"));
-
-// 	return 0;
-// }
-
-
-
-
-
-//////////////////////////////////////////////////////
-
-
 // int main ()
 // {
 //     struct timeval t1, t2;
@@ -277,6 +139,8 @@ int main()
 	srand(time(0));
 
 	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
+	EnguinApi_Canvas_CursorHide();
+	EnguinApi_Canvas_InputHide();
 	while(1){
 
 		gettimeofday(&t1, NULL);
@@ -288,37 +152,22 @@ int main()
 		//		canvas.cells[j*60+i].isModified = 1;
 		//	}
 		//}
-	
-		//TODO -> kbhit skusit po ESC, ci je tam este nieco
-
-		// if(EnguinApi_Input_Kbhit()){
-		// 	ch = EnguinApi_Input_Getch();
-		// 	if(ch=='\033'){
-		// 		if(EnguinApi_Input_Kbhit()){
-		// 			EnguinApi_Canvas_MoveTo(&canvas, 0,1);
-		// 			EnguinApi_Canvas_Write(&canvas, "ESC and something");
-		// 			break;
-		// 		}
-		// 		else{
-		// 			EnguinApi_Canvas_MoveTo(&canvas, 0,0);
-		// 			EnguinApi_Canvas_Write(&canvas, "ESC");
-		// 		}
-		// 	}
-		// 	else if(ch=='q'||ch=='Q'){
-		// 		break;
-		// 	}
-		// }
+		
+		EnguinApi_Canvas_SetForeground(&canvas, (int[3]){7, 48, 245});
+		EnguinApi_Canvas_SetBackground(&canvas, (int[3]){245,127,194});
 
 		ch = EnguinApi_Input_KeyPressed();
-
 		if(ch==KEY_UP){
 			EnguinApi_Canvas_MoveTo(&canvas, 0,0);
 			EnguinApi_Canvas_Write(&canvas, "debil");
 		}
-		else if(ch=='q'){
+		else if(ch==KEY_DOWN){
+			EnguinApi_Canvas_MoveTo(&canvas, 0,0);
+			EnguinApi_Canvas_Write(&canvas, "autik");
+		}
+		else if(ch=='q'||ch=='Q'||ch==KEY_ESC){
 			break;
 		}
-
 
 		EnguinApi_Canvas_Flush(&canvas);
 
@@ -339,6 +188,9 @@ int main()
 		//EnguinApi_Canvas_Flush(&canvas);
 
 	}
+	EnguinApi_Canvas_InputShow();
+	EnguinApi_Canvas_CursorShow();
+
 	return 0;
 }
 

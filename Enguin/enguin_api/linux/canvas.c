@@ -53,15 +53,31 @@ char* EnguinApi_Cell_ToString(EnguinApi_Cell* cell)
 }
 
 //Canvas
+void EnguinApi_Canvas_SetForeground(EnguinApi_Canvas* canvas, int foreground[3])
+{
+	canvas->foreground[0]=foreground[0];
+	canvas->foreground[1]=foreground[1];
+	canvas->foreground[2]=foreground[2];
+}
+
+void EnguinApi_Canvas_SetBackground(EnguinApi_Canvas* canvas, int background[3])
+{
+	canvas->background[0]=background[0];
+	canvas->background[1]=background[1];
+	canvas->background[2]=background[2];
+}
+
 EnguinApi_Canvas EnguinApi_Canvas_Create(int width, int height)
 {
 	EnguinApi_Canvas canvas = {.width=width, .height=height, .cursorX=0, .cursorY=0};
+	EnguinApi_Canvas_SetForeground(&canvas, (int[3]){-1,-1,-1});
+	EnguinApi_Canvas_SetBackground(&canvas, (int[3]){-1,-1,-1});
 	canvas.cells = (EnguinApi_Cell*)malloc(width*height*sizeof(EnguinApi_Cell));
 	int maxLength = strlen("\x1b[;HC")+EnguinApi_Utils_CountDigits(width)+EnguinApi_Utils_CountDigits(height)+
 		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m")+1;
 	canvas.lastFrame = EnguinApi_Utils_Buffer_Create(width*height, maxLength);
 	for(int i=0;i<width*height;i++){
-		canvas.cells[i] = EnguinApi_Cell_Create(' ', i%width, i/width, (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
+		canvas.cells[i] = EnguinApi_Cell_Create(' ', i%width, i/width, canvas.foreground, canvas.background);
 	}
 	return canvas;
 }
@@ -75,6 +91,8 @@ void EnguinApi_Canvas_Write(EnguinApi_Canvas* canvas, char* str)
 			canvas->cells[pointer].ch = str[i];
 			canvas->cells[pointer].x = canvas->cursorX;
 			canvas->cells[pointer].y = canvas->cursorY;
+			EnguinApi_Cell_SetForeground(&canvas->cells[pointer], canvas->foreground);
+			EnguinApi_Cell_SetBackground(&canvas->cells[pointer], canvas->background);
 			canvas->cells[pointer].isModified = 1;
 		}
 		canvas->cursorX+=1;
@@ -111,4 +129,33 @@ void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas* canvas, int x, int y)
 {
 	canvas->cursorX = x;
 	canvas->cursorY = y;
+}
+
+void EnguinApi_Canvas_Erease(EnguinApi_Canvas* canvas, int x1, int y1, int x2, int y2)
+{
+	for(int y=y1;y<=y2;y++){
+		for(int x=x1;x<=x2;x++){
+			EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+		}
+	}
+}
+
+void EnguinApi_Canvas_CursorHide()
+{
+	system("tput civis");
+}
+
+void EnguinApi_Canvas_CursorShow()
+{
+	system("tput cnorm");
+}
+
+void EnguinApi_Canvas_InputHide()
+{
+	system("stty -echo");
+}
+
+void EnguinApi_Canvas_InputShow()
+{
+	system("stty echo");
 }

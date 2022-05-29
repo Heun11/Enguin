@@ -1,6 +1,7 @@
 #pragma once
 #ifndef CANVAS_H
 #define CANVAS_H
+
 #include"utils.h"
 #include<string.h>
 #include<stdio.h>
@@ -29,11 +30,20 @@ typedef struct{
 	EnguinApi_Utils_Buffer lastFrame;
 	int width, height;
 	int cursorX, cursorY;
+	int background[3];
+	int foreground[3];
 }EnguinApi_Canvas;
 
 EnguinApi_Canvas EnguinApi_Canvas_Create(int, int);
 void EnguinApi_Canvas_Write(EnguinApi_Canvas*, char*);
 void EnguinApi_Canvas_Flush(EnguinApi_Canvas*);
 void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas*, int, int);
+void EnguinApi_Canvas_SetForeground(EnguinApi_Canvas*, int[3]);
+void EnguinApi_Canvas_SetBackground(EnguinApi_Canvas*, int[3]);
+void EnguinApi_Canvas_Erease(EnguinApi_Canvas* , int, int, int, int);
+void EnguinApi_Canvas_CursorHide();
+void EnguinApi_Canvas_CursorShow();
+void EnguinApi_Canvas_InputHide();
+void EnguinApi_Canvas_InputShow();
 
 #endif
