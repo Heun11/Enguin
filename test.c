@@ -41,8 +41,10 @@
 // }
 
 #include<stdio.h>
+#include"Enguin/Enguin.h"
 
 int main()
 {
+	Enguin_Surface surf = Enguin_Surface_Init(30,30, ' ',(int[3]){128,210,143},(int[3]){-1,-1,-1});
 	return 0;
 }

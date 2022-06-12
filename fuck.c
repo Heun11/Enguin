@@ -138,6 +138,14 @@ int main()
 	int ch;
 	srand(time(0));
 
+	char* surf1 = (char)malloc(30*30);
+	char* surf2 = (char)malloc(30*30);
+
+	for(int i=0;i<30*30;i++){
+		surf1[i] = '-';
+		surf2[i] = '-';
+	}
+
 	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(60,30);
 	EnguinApi_Canvas_CursorHide();
 	EnguinApi_Canvas_InputHide();
