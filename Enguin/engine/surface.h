@@ -14,5 +14,7 @@ typedef struct{
 }Enguin_Surface;
 
 Enguin_Surface Enguin_Surface_Init(int, int, char, int[3], int[3]);
+void Enguin_Surface_Draw(Enguin_Surface*);
+void Enguin_Surface_Update(Enguin_Surface*);
 
 #endif

@@ -46,5 +46,13 @@
 int main()
 {
 	Enguin_Surface surf = Enguin_Surface_Init(30,30, ' ',(int[3]){128,210,143},(int[3]){-1,-1,-1});
+	Enguin_Surface_Draw(&surf);
+
+	while(1){
+		Enguin_Surface_Update(&surf);
+	}
+
+	EnguinApi_Canvas_InputShow();
+	EnguinApi_Canvas_CursorShow();
 	return 0;
 }

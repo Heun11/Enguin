@@ -57,3 +57,8 @@ void EnguinApi_Utils_Buffer_Set(EnguinApi_Utils_Buffer* buff, int id, char* str)
 	}
 }
 
+void EnguinApi_Utils_Kill()
+{
+	system("reset");
+	_exit(0);
+}
