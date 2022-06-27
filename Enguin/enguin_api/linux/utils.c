@@ -1,5 +1,16 @@
 #include"utils.h"
 
+int EnguinApi_Utils_CompareArrays(int* arr1, int* arr2, int len)
+{
+	int i;
+	for(i=0;i<len;i++){
+		if(arr1[i]!=arr2[i]){
+			return 0;
+		}
+	}
+	return 1;
+}
+
 int EnguinApi_Utils_RandomNumber(int start, int stop)
 {
 	if(SRAND_CALL!=-1){

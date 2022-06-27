@@ -10,7 +10,7 @@ typedef struct{
 	int width, height;
 	char default_char;
 	int default_back[3];
-	int default_front[3];
+	int default_fore[3];
 }Enguin_Surface;
 
 Enguin_Surface Enguin_Surface_Init(int, int, char, int[3], int[3]);

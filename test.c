@@ -43,13 +43,25 @@
 #include<stdio.h>
 #include"Enguin/Enguin.h"
 
+//TODO -> write test 
+
 int main()
 {
-	Enguin_Surface surf = Enguin_Surface_Init(30,30, ' ',(int[3]){128,210,143},(int[3]){-1,-1,-1});
+	Enguin_Surface surf = Enguin_Surface_Init(30,30, 'x',(int[3]){128,210,143},(int[3]){20,100,1});
 	Enguin_Surface_Draw(&surf);
+	char key;
 
 	while(1){
+		key = EnguinApi_Input_KeyPressed();
+		if(key==KEY_ESC || key=='q' || key=='Q'){
+			break;
+		}
+
+		for(int i=0;i<30*30;i++){
+			surf.cells[i].ch = EnguinApi_Utils_RandomNumber(65, 125);
+		}
 		Enguin_Surface_Update(&surf);
+		EnguinApi_Utils_Sleep((float)1/60);
 	}
 
 	EnguinApi_Canvas_InputShow();
