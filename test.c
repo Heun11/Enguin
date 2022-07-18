@@ -43,13 +43,17 @@
 #include<stdio.h>
 #include"Enguin/Enguin.h"
 
-//TODO -> write test 
+//TODO -> write test -> 
+//	-> this up 
+//	-> Fake dino
 
 int main()
 {
-	Enguin_Surface surf = Enguin_Surface_Init(30,30, 'x',(int[3]){128,210,143},(int[3]){20,100,1});
+	Enguin_Surface surf = Enguin_Surface_Init(30,30, '.',(int[3]){-1,-1,-1},(int[3]){-1,-1,-1});
 	Enguin_Surface_Draw(&surf);
 	char key;
+
+	float x = 2;
 
 	while(1){
 		key = EnguinApi_Input_KeyPressed();
@@ -57,11 +61,21 @@ int main()
 			break;
 		}
 
-		for(int i=0;i<30*30;i++){
-			surf.cells[i].ch = EnguinApi_Utils_RandomNumber(65, 125);
+		//for(int i=0;i<30*30;i++){
+		//	surf.cells[i].ch = EnguinApi_Utils_RandomNumber(65, 125);
+		//}
+
+		if(x<26){
+			x+=1;
 		}
+
+		surf.cells[1*30+(int)x].ch = 'X';
+		surf.cells[3*30+(int)x].ch = 'X';
+		surf.cells[5*30+(int)x].ch = 'X';
+		surf.cells[7*30+(int)x].ch = 'X';
+
 		Enguin_Surface_Update(&surf);
-		EnguinApi_Utils_Sleep((float)1/60);
+		EnguinApi_Utils_Sleep((float)1/120);
 	}
 
 	EnguinApi_Canvas_InputShow();

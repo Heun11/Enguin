@@ -3,7 +3,6 @@ import os, sys
 CC = "gcc"
 LIBNAME = "Enguin"
 
-#TODO->clean each .o file in each dir
 def clean(dir_):
     #os.system("rm *.o")
     #os.system("rm *.a") 

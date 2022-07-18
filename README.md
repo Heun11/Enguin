@@ -1,5 +1,11 @@
 # Minimalistic Game Engine (Enguin)
-docs:
+## To DO:
+- make colors optional [x]
+- recreate how color works in canvas=api []
+- make better default things in canvas=api []
+- write demo dino for speed test []
+
+## Docs:
 - link
 ## Development
 - Linux(Debian):

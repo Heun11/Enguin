@@ -25,9 +25,9 @@ void EnguinApi_Cell_ResetBackground(EnguinApi_Cell* cell)
 	EnguinApi_Cell_SetBackground(cell, (int[3]){-1,-1,-1});
 }
 
-EnguinApi_Cell EnguinApi_Cell_Create(char ch, int x, int y, int foreground[3], int background[3])
+EnguinApi_Cell EnguinApi_Cell_Create(char ch, int x, int y, int wF, int wB, int foreground[3], int background[3])
 {
-	EnguinApi_Cell cell = {.ch=ch, .x=x, .y=y, .isModified=1};
+	EnguinApi_Cell cell = {.ch=ch, .x=x, .y=y, .isModified=1, .wantBack=wB, .wantFore=wF};
 	EnguinApi_Cell_SetForeground(&cell, foreground);
 	EnguinApi_Cell_SetBackground(&cell, background);
 	return cell;
@@ -46,9 +46,22 @@ char* EnguinApi_Cell_ToString(EnguinApi_Cell* cell)
 	int len = strlen("\x1b[;HC")+EnguinApi_Utils_CountDigits(cell->x+1)+EnguinApi_Utils_CountDigits(cell->y+1)+
 		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m")+1;
 	char* str = (char*)malloc(len*sizeof(char));
-	snprintf(str, len, "\x1b[%d;%dH\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
-		cell->foreground[0], cell->foreground[1], cell->foreground[2], 
-		cell->background[0], cell->background[1], cell->background[2], cell->ch);
+	if(cell->wantFore&&cell->wantBack){
+		snprintf(str, len, "\x1b[%d;%dH\x1b[38;2;%d;%d;%dm\x1b[48;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
+			cell->foreground[0], cell->foreground[1], cell->foreground[2], 
+			cell->background[0], cell->background[1], cell->background[2], cell->ch);
+	}
+	else if(cell->wantFore){
+		snprintf(str, len, "\x1b[%d;%dH\x1b[38;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
+			cell->foreground[0], cell->foreground[1], cell->foreground[2], cell->ch);
+	}
+	else if(cell->wantBack){
+		snprintf(str, len, "\x1b[%d;%dH\x1b[48;2;%d;%d;%dm%c",cell->y+1,cell->x+1,
+			cell->background[0], cell->background[1], cell->background[2], cell->ch);
+	}
+	else{
+		snprintf(str, len, "\x1b[%d;%dH%c", cell->y+1, cell->x+1, cell->ch);
+	}
 	return str;
 }
 
@@ -67,22 +80,28 @@ void EnguinApi_Canvas_SetBackground(EnguinApi_Canvas* canvas, int background[3])
 	canvas->background[2]=background[2];
 }
 
-EnguinApi_Canvas EnguinApi_Canvas_Create(int width, int height)
+EnguinApi_Canvas EnguinApi_Canvas_Create(int width, int height, int wF, int wB)
 {
-	EnguinApi_Canvas canvas = {.width=width, .height=height, .cursorX=0, .cursorY=0};
+	EnguinApi_Canvas canvas = {.width=width, .height=height, .cursorX=0, .cursorY=0, .wantFore=wF, .wantBack=wB};
 	EnguinApi_Canvas_SetForeground(&canvas, (int[3]){-1,-1,-1});
 	EnguinApi_Canvas_SetBackground(&canvas, (int[3]){-1,-1,-1});
 	canvas.cells = (EnguinApi_Cell*)malloc(width*height*sizeof(EnguinApi_Cell));
 	int maxLength = strlen("\x1b[;HC")+EnguinApi_Utils_CountDigits(width)+EnguinApi_Utils_CountDigits(height)+
-		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[38;2;255;255;255m")+1;
+		strlen("\x1b[48;2;255;255;255m")+strlen("\x1b[48;2;255;255;255m")+1;
+	// if(canvas.wantBack){
+	// 	maxLength+=strlen("\x1b[48;2;255;255;255m");
+	// }
+	// if(canvas.wantFore){
+	// 	maxLength+=strlen("\x1b[48;2;255;255;255m");
+	// }
 	canvas.lastFrame = EnguinApi_Utils_Buffer_Create(width*height, maxLength);
 	for(int i=0;i<width*height;i++){
-		canvas.cells[i] = EnguinApi_Cell_Create(' ', i%width, i/width, canvas.foreground, canvas.background);
+		canvas.cells[i] = EnguinApi_Cell_Create(' ', i%width, i/width, canvas.wantFore, canvas.wantBack, canvas.foreground, canvas.background);
 	}
 	return canvas;
 }
 
-void EnguinApi_Canvas_Write(EnguinApi_Canvas* canvas, char* str)
+void EnguinApi_Canvas_Write(EnguinApi_Canvas* canvas, char* str, int foreground[3], int background[3])
 {
 	int pointer;
 	for(int i=0;i<(int)strlen(str);i++){
@@ -91,8 +110,10 @@ void EnguinApi_Canvas_Write(EnguinApi_Canvas* canvas, char* str)
 			canvas->cells[pointer].ch = str[i];
 			canvas->cells[pointer].x = canvas->cursorX;
 			canvas->cells[pointer].y = canvas->cursorY;
-			EnguinApi_Cell_SetForeground(&canvas->cells[pointer], canvas->foreground);
-			EnguinApi_Cell_SetBackground(&canvas->cells[pointer], canvas->background);
+			// EnguinApi_Cell_SetForeground(&canvas->cells[pointer], canvas->foreground);
+			// EnguinApi_Cell_SetBackground(&canvas->cells[pointer], canvas->background);
+			EnguinApi_Cell_SetForeground(&canvas->cells[pointer], foreground);
+			EnguinApi_Cell_SetBackground(&canvas->cells[pointer], background);
 			canvas->cells[pointer].isModified = 1;
 		}
 		canvas->cursorX+=1;

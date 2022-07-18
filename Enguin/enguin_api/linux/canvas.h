@@ -12,11 +12,13 @@ typedef struct{
 	int isModified;
 	char ch;
 	int x, y;
+	int wantBack;
+	int wantFore;
 	int foreground[3];
 	int background[3];
 }EnguinApi_Cell;
 
-EnguinApi_Cell EnguinApi_Cell_Create(char, int, int, int[3], int[3]);
+EnguinApi_Cell EnguinApi_Cell_Create(char, int, int, int, int, int[3], int[3]);
 void EnguinApi_Cell_Reset(EnguinApi_Cell*);
 void EnguinApi_Cell_SetForeground(EnguinApi_Cell*, int[3]);
 void EnguinApi_Cell_ResetForeground(EnguinApi_Cell*);
@@ -30,12 +32,14 @@ typedef struct{
 	EnguinApi_Utils_Buffer lastFrame;
 	int width, height;
 	int cursorX, cursorY;
+	int wantBack;
+	int wantFore;
 	int background[3];
 	int foreground[3];
 }EnguinApi_Canvas;
 
-EnguinApi_Canvas EnguinApi_Canvas_Create(int, int);
-void EnguinApi_Canvas_Write(EnguinApi_Canvas*, char*);
+EnguinApi_Canvas EnguinApi_Canvas_Create(int, int, int, int);
+void EnguinApi_Canvas_Write(EnguinApi_Canvas*, char*, int[3], int[3]);
 void EnguinApi_Canvas_Flush(EnguinApi_Canvas*);
 void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas*, int, int);
 void EnguinApi_Canvas_SetForeground(EnguinApi_Canvas*, int[3]);
