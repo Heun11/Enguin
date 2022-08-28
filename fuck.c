@@ -208,13 +208,20 @@
 
 int main()
 {
-	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,0,(int[3]){7, 48, 245},(int[3]){92, 76, 214}, 'W');
+	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,1,(int[3]){47, 198, 222},(int[3]){113, 91, 128}, ' ');
 	EnguinApi_Canvas_CursorHide();
 	EnguinApi_Canvas_InputHide();
 
 	char ch;
 
-	EnguinApi_Canvas_Write(&canvas, "Hello World Niggas", (int[3]){53,80,40}, (int[3]){21,89,231});
+	int x = 0;
+	int y = 3;
+
+	int prevx = x;
+	int prevy = y;
+
+	int sx = 1;
+	int sy = 1;
 
 	while(1){
 		ch = EnguinApi_Input_KeyPressed();
@@ -222,7 +229,26 @@ int main()
 			break;
 		}
 
+		prevx=x;
+		prevy=y;
+		x+=sx;
+		y+=sy;
+
+		if(x>=29||x<=0){
+			sx*=-1;
+		}
+		if(y>=29||y<=0){
+			sy*=-1;
+		}
+		
+		EnguinApi_Canvas_EreaseOne(&canvas, prevx,prevy);
+		EnguinApi_Canvas_MoveTo(&canvas, x, y);
+		EnguinApi_Canvas_Write(&canvas, "O", (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
+
+
 		EnguinApi_Canvas_Flush(&canvas);
+
+		EnguinApi_Utils_Sleep((float)1/30);
 	}
 
 	EnguinApi_Canvas_InputShow();

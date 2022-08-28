@@ -53,6 +53,7 @@ void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas*, int, int);
 void EnguinApi_Canvas_SetForeground(EnguinApi_Canvas*, int[3]);
 void EnguinApi_Canvas_SetBackground(EnguinApi_Canvas*, int[3]);
 void EnguinApi_Canvas_Erease(EnguinApi_Canvas* , int, int, int, int);
+void EnguinApi_Canvas_EreaseOne(EnguinApi_Canvas* , int, int);
 void EnguinApi_Canvas_CursorHide();
 void EnguinApi_Canvas_CursorShow();
 void EnguinApi_Canvas_InputHide();

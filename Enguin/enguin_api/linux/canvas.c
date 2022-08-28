@@ -173,6 +173,11 @@ void EnguinApi_Canvas_Erease(EnguinApi_Canvas* canvas, int x1, int y1, int x2, i
 	}
 }
 
+void EnguinApi_Canvas_EreaseOne(EnguinApi_Canvas* canvas, int x, int y)
+{
+	EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+}
+
 void EnguinApi_Canvas_CursorHide()
 {
 	system("tput civis");
