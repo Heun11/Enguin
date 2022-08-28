@@ -208,20 +208,11 @@
 
 int main()
 {
-	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,0);
+	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,0,(int[3]){7, 48, 245},(int[3]){92, 76, 214}, 'W');
 	EnguinApi_Canvas_CursorHide();
 	EnguinApi_Canvas_InputHide();
 
 	char ch;
-
-	EnguinApi_Canvas_SetForeground(&canvas, (int[3]){7, 48, 245});
-	EnguinApi_Canvas_SetBackground(&canvas, (int[3]){245,127,194});
-
-	for(int i=0;i<30*30;i++){
-		canvas.cells[i].ch = 'Q';
-		EnguinApi_Cell_SetForeground(&canvas.cells[i], (int[3]){7,48,245});
-		EnguinApi_Cell_SetBackground(&canvas.cells[i], (int[3]){245,127,194});
-	}
 
 	EnguinApi_Canvas_Write(&canvas, "Hello World Niggas", (int[3]){53,80,40}, (int[3]){21,89,231});
 
