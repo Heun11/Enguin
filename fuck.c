@@ -205,10 +205,11 @@
 
 
 #include"Enguin/Enguin.h"
+#include<sys/time.h>
 
 int main()
 {
-	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,1,(int[3]){47, 198, 222},(int[3]){113, 91, 128}, ' ');
+	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,1,(int[3]){200, 198, 222},(int[3]){10, 20, 15}, ' ');
 	EnguinApi_Canvas_CursorHide();
 	EnguinApi_Canvas_InputHide();
 
@@ -223,7 +224,25 @@ int main()
 	int sx = 1;
 	int sy = 1;
 
+
+	struct timeval current_time;
+
+	int FPS = 60;
+	char strFPS[7];
+
+	double startTime;
+	double URDTimeMilis;
+	double waitTime;
+	double targetTime = 1000/FPS;
+
+
+
 	while(1){
+		gettimeofday(&current_time, NULL);
+		startTime = current_time.tv_usec;
+
+
+
 		ch = EnguinApi_Input_KeyPressed();
 		if(ch=='q'||ch=='Q'||ch==KEY_ESC){
 			break;
@@ -245,10 +264,21 @@ int main()
 		EnguinApi_Canvas_MoveTo(&canvas, x, y);
 		EnguinApi_Canvas_Write(&canvas, "O", (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
 
+		EnguinApi_Canvas_Erease(&canvas, 0,0, 5,0);
+		EnguinApi_Canvas_MoveTo(&canvas, 0,0);
+		snprintf(strFPS, 7, "FPS:%d", (int)(1/(waitTime/1000)));
+		EnguinApi_Canvas_Write(&canvas, strFPS, (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
 
 		EnguinApi_Canvas_Flush(&canvas);
 
-		EnguinApi_Utils_Sleep((float)1/30);
+
+
+		gettimeofday(&current_time, NULL);
+		URDTimeMilis = (current_time.tv_usec-startTime)/1000;
+		waitTime = targetTime-URDTimeMilis;
+
+		EnguinApi_Utils_Sleep((float)(waitTime/1000));
+
 	}
 
 	EnguinApi_Canvas_InputShow();
