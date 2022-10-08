@@ -2,6 +2,7 @@
 ## To DO:
 - make colors optional [x]
 - make better default things in canvas=api [x]
+- make fps and delta time []
 - write demo dino for speed test []
 - (optional) recreate how color works in canvas=api []
 

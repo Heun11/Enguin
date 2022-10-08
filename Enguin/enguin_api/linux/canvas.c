@@ -166,9 +166,12 @@ void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas* canvas, int x, int y)
 
 void EnguinApi_Canvas_Erease(EnguinApi_Canvas* canvas, int x1, int y1, int x2, int y2)
 {
-	for(int y=y1;y<=y2;y++){
-		for(int x=x1;x<=x2;x++){
-			EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+	if(x1>=0&&x1<canvas->width&&y1>=0&&y1<canvas->height&&
+	x2>=0&&x2<canvas->width&&y2>=0&&y2<canvas->height){
+		for(int y=y1;y<=y2;y++){
+			for(int x=x1;x<=x2;x++){
+				EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+			}
 		}
 	}
 }
