@@ -207,114 +207,72 @@
 #include"Enguin/Enguin.h"
 #include<sys/time.h>
 
+#define W 50
+#define H 30
+
 int main()
 {
-	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(30,30,1,1,(int[3]){200, 198, 222},(int[3]){10, 20, 15}, ' ');
+	EnguinApi_Canvas canvas = EnguinApi_Canvas_Create(W,H,1,1,(int[3]){200, 198, 222},(int[3]){10, 20, 15}, ' ');
 	EnguinApi_Canvas_Flush(&canvas);
 	EnguinApi_Canvas_CursorHide();
 	EnguinApi_Canvas_InputHide();
 
-	char ch;
+	const int FPS = 30;
+	const int frameDelay = 1000/FPS;
 
-	float x = 0;
-	float y = 3;
+
+	time_t t = time(NULL);
+	__uint32_t frameStart;
+	int frameTime;
+
+	char ch;
+	char strFPS[64] = "FPS";
+
+	float x = 0.1;
+	float y = 0.1;
 
 	float prevx = x;
 	float prevy = y;
 
-	float sx = 10;
-	float sy = 10;
-
-
-	struct timeval current_time;
-
-	int FPS = 2;
-	char strFPS[7];
-	char strDT[20];
-
-	//double startTime;
-	//double endTime;
-	//double URDTimeMilis;
-	//double waitTime;
-	//double targetTime = 1000/FPS;
-
-	//double deltaTime = 1;
-
-	// https://stackoverflow.com/questions/28008549/limit-while-loop-to-run-at-30-fps-using-a-delta-variable-c 
-	// possible solution 
-
-
-	gettimeofday(&current_time, NULL);
-	double now = current_time.tv_usec/1000;
-	double lastFrame = current_time.tv_usec/1000;
-	double delta;
-	float smallestDelta = 1000/FPS;
-
-	printf("%lf, %lf, %lf", now, lastFrame, smallestDelta);
-
+	float sx = 0.7;
+	float sy = 0.5;
 
 	while(1){
-		gettimeofday(&current_time, NULL);
-		now = current_time.tv_usec/1000;
-		delta = now-lastFrame;
-		lastFrame = now;
-
-		if(delta<smallestDelta){
-			EnguinApi_Utils_Sleep((float)((smallestDelta-delta)/1000));
-		}
-
-		//gettimeofday(&current_time, NULL);
-		//startTime = current_time.tv_usec;
-
-
-
+	
 		ch = EnguinApi_Input_KeyPressed();
 		if(ch=='q'||ch=='Q'||ch==KEY_ESC){
 			break;
 		}
 		
-		prevx=x;
-		prevy=y;
-		x+=sx*delta;
-		y+=sy*delta;
+		if(x>=W-1||x<=0){
+			sx*=-1;
+		}
+		if(y>=H-1||y<=0){
+			sy*=-1;
+		}
 
-		//if(x>=29||x<=0){
-		//	sx*=-1;
-		//}
-		//if(y>=29||y<=0){
-		//	sy*=-1;
-		//}
-		
+		prevx = x;
+		prevy = y;
 
+		x+=sx;
+		y+=sy;
 
+		frameStart = time(NULL)*1000;
+
+		// EnguinApi_Canvas_Erease(&canvas, (int)prevx, (int)prevy, (int)prevx, (int)prevy);
 		EnguinApi_Canvas_MoveTo(&canvas, (int)x, (int)y);
-		EnguinApi_Canvas_Write(&canvas, "O", (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
+		EnguinApi_Canvas_Write(&canvas, "$", (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
 
-		//EnguinApi_Canvas_Erease(&canvas, 0,0, 5,0);
-		//EnguinApi_Canvas_MoveTo(&canvas, 0,0);
-		//snprintf(strFPS, 7, "FPS:%d", (int)(1/(waitTime/1000)));
-		//EnguinApi_Canvas_Write(&canvas, strFPS, (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
-
-		EnguinApi_Canvas_Erease(&canvas, 0,1, 20,1);
-		EnguinApi_Canvas_MoveTo(&canvas, 0,1);
-		snprintf(strDT, 20, "DT:%lf", delta);
-		//snprintf(strDT, 20, ">x:%dy:%dsx:%dsy:%d", (int)x, (int)y, (int)sx, (int)sy);
-		EnguinApi_Canvas_Write(&canvas, strDT, (int[3]){-1,-1,-1}, (int[3]){-1,-1,-1});
-
-
+		EnguinApi_Canvas_Erease(&canvas, 0,0, 5,0);
+		EnguinApi_Canvas_MoveTo(&canvas, 0,0);
+		EnguinApi_Canvas_Write(&canvas, strFPS, (int[3]){50, 151, 168}, (int[3]){-1,-1,-1});
 		EnguinApi_Canvas_Flush(&canvas);
 
-
-
-		//gettimeofday(&current_time, NULL);
-		//endTime = current_time.tv_usec;
-		//URDTimeMilis = (endTime-startTime)/1000;
-		//waitTime = targetTime-URDTimeMilis;
-
-		//deltaTime = (endTime-startTime)/1000;
-
-		//EnguinApi_Utils_Sleep((float)(waitTime/1000));
-
+		frameTime = time(NULL)*1000 - frameStart;
+		if(frameDelay>frameTime){
+			snprintf(strFPS, 7, "FPS:%d", (int)(1/(((float)frameDelay-(float)frameTime)/1000)));
+			EnguinApi_Utils_Sleep((float)(frameDelay-frameTime));
+		}
 	}
 
 	EnguinApi_Canvas_InputShow();

@@ -30,10 +30,10 @@ int EnguinApi_Utils_CountDigits(int n)
 	return c;
 }
 
-void EnguinApi_Utils_Sleep(float seconds)
+void EnguinApi_Utils_Sleep(float miliseconds)
 {
-	int ms = (int)(seconds*1000000);
-	usleep(ms);
+	int micros = (int)(miliseconds*1000);
+	usleep(micros);
 }
 
 EnguinApi_Utils_Buffer EnguinApi_Utils_Buffer_Create(int size, int maxLength)
