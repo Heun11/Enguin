@@ -1,5 +1,10 @@
 #include"utils.h"
 
+int EnguinApi_Utils_GetTicks()
+{
+	return time(NULL)*1000;
+}
+
 int EnguinApi_Utils_CompareArrays(int* arr1, int* arr2, int len)
 {
 	int i;

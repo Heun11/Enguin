@@ -20,6 +20,7 @@ typedef struct{
 	char* string;
 }EnguinApi_Utils_Buffer;
 
+int EnguinApi_Utils_GetTicks();
 int EnguinApi_Utils_CompareArrays(int*, int*, int);
 EnguinApi_Utils_Buffer EnguinApi_Utils_Buffer_Create(int, int);
 char* EnguinApi_Utils_Buffer_Get(EnguinApi_Utils_Buffer*, int);

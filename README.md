@@ -1,20 +1,12 @@
 # Minimalistic Game Engine (Enguin)
-## To DO:
-- make colors optional [x]
-- make better default things in canvas=api [x]
-- make fps and delta time []
-- write demo dino for speed test []
-- (optional) recreate how color works in canvas=api []
 
-### DOLEZITE -> je to pomala sracka a nikto by to nikdy nemal pouzivat!, ak to chces pouzit tak sa chod zabit, je to podobne utrpenie :)
+## About:
+Enguin is minimalistic game engine based in terminal technology. It is pretty much like ncurses but worse
 
-## Docs:
-- link
-## Development
-- Linux(Debian):
-	1. download Enguin folder
-	2. use as in docs
-	3. run: ./name
+## There are some demos too
 
-- Windows:
-	1. Not yet :(
+### What needs to be done?
+    []add sound 
+    []fix some of bugs
+    []add some new features
+		[]rendering circles

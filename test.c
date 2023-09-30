@@ -1,84 +1,61 @@
-// #include<stdio.h>
-
-// #include"Enguin/Enguin.h"
-
-// int main()
-// {
-// 	ENGUIN_Surface s = ENGUIN_CreateSurface(30,30);
-// 	ENGUIN_DrawSurface(&s);
-
-// 	float x = 2;
-
-// 	int run = 1;
-// 	while(run){
-// 		// ENGUIN_DrawPoint(&s, (int)x,2,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,4,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,6,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,8,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,10,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,12,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,14,'X');
-// 		// ENGUIN_DrawPoint(&s, (int)x,16,'X');
-
-// 		// if(x<26){
-// 		// 	x+=0.0001;
-// 		// }
-
-// 		ENGUIN_CursorMoveTo(&s, x, 2);
-// 		ENGUIN_CursorWrite(&s, 'C');
-		
-// 		if(x<26){
-// 			x+=0.0001;
-// 		}
-
-// 		ENGUIN_UpdateSurface(&s);
-		
-// 		ENGUIN_Delay(1/30);
-// 	}
-// 	ENGUIN_KillSurface(&s);
-	
-// 	return 0;
-// }
-
 #include<stdio.h>
 #include"Enguin/Enguin.h"
 
-//TODO -> write test -> 
-//	-> this up 
-//	-> Fake dino
+#define W 80
+#define H 40
 
 int main()
 {
-	Enguin_Surface surf = Enguin_Surface_Init(30,30, '.',(int[3]){-1,-1,-1},(int[3]){-1,-1,-1});
+	Enguin_Surface surf = Enguin_Surface_Init(W,H, ' ', 1, 1, (int[3]){163, 46, 106}, (int[3]){46, 149, 163});
 	Enguin_Surface_Draw(&surf);
-	char key;
+	
+	int run = 1;
+	const int fps = 60;
+	const int frameDelay = 1000/fps;
+	int frameStart, frameTime;
+	char ch;
+	char strFPS[64] = "FPS";
 
-	float x = 2;
+	float y = 0;
+	float x = 0;
 
-	while(1){
-		key = EnguinApi_Input_KeyPressed();
-		if(key==KEY_ESC || key=='q' || key=='Q'){
+
+	while(run){
+		ch = EnguinApi_Input_KeyPressed();
+		if(ch=='q'||ch=='Q'||ch==KEY_ESC){
 			break;
 		}
-
-		//for(int i=0;i<30*30;i++){
-		//	surf.cells[i].ch = EnguinApi_Utils_RandomNumber(65, 125);
-		//}
-
-		if(x<26){
-			x+=1;
+		
+		if(ch=='w'||ch=='W'){
+			y-=1;
+		}
+		if(ch=='s'||ch=='S'){
+			y+=1;
+		}
+		if(ch=='a'||ch=='A'){
+			x-=2;
+		}
+		if(ch=='d'||ch=='D'){
+			x+=2;
 		}
 
-		surf.cells[1*30+(int)x].ch = 'X';
-		surf.cells[3*30+(int)x].ch = 'X';
-		surf.cells[5*30+(int)x].ch = 'X';
-		surf.cells[7*30+(int)x].ch = 'X';
+		frameStart = EnguinApi_Utils_GetTicks();
 
+		Enguin_Text_Draw(&surf, 20, H/2, "This is interactive demo of Enguin!", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+		Enguin_Text_Draw(&surf, 20+1, H/2+1, "You are a small block in most top left corner,", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+		Enguin_Text_Draw(&surf, 20+2, H/2+2, "Use AWSD to move out of it :)", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+
+		Enguin_Rect_Draw(&surf, x, y, 2, 1, 'X', (int[3]){28, 27, 28}, (int[3]){217, 206, 217});
+
+		Enguin_Text_Draw(&surf, 0, 0, strFPS, (int[3]){0,0,0}, (int[3]){245, 66, 164});
 		Enguin_Surface_Update(&surf);
-		EnguinApi_Utils_Sleep((float)1/120);
-	}
 
-	EnguinApi_Canvas_InputShow();
-	EnguinApi_Canvas_CursorShow();
+		frameTime = EnguinApi_Utils_GetTicks() - frameStart;
+		if(frameDelay>frameTime){
+			snprintf(strFPS, 7, "FPS:%d", (int)(1/(((float)frameDelay-(float)frameTime)/1000)));
+			EnguinApi_Utils_Sleep((float)(frameDelay-frameTime));
+		}
+	}
+	EnguinApi_Utils_Kill();
 	return 0;
 }
