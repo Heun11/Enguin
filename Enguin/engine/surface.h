@@ -1,6 +1,5 @@
-#ifndef ENGUIN
-#define ENGUIN
-#pragma once
+#ifndef ENGUIN_SURFACE_H
+#define ENGUIN_SURFACE_H
 
 #include"../enguin_api/enguinApi.h"
 

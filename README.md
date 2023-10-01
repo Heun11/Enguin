@@ -9,3 +9,4 @@ Enguin is minimalistic game engine based in terminal technology. It is pretty mu
     []add sound 
     []fix some of bugs
     []add some new features
+    []image editor
