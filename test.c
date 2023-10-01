@@ -6,7 +6,7 @@
 
 int main()
 {
-	Enguin_Surface surf = Enguin_Surface_Init(W,H, ' ', 1, 1, (int[3]){163, 46, 106}, (int[3]){46, 149, 163});
+	Enguin_Surface surf = Enguin_Surface_Init(W,H, ' ', 1, 1, (int[3]){163, 46, 106}, (int[3]){232, 240, 165});
 	Enguin_Surface_Draw(&surf);
 	
 	int run = 1;
@@ -22,7 +22,8 @@ int main()
 	float dx = 0;
 	float ds = 1;
 
-    Enguin_Image img = Enguin_Image_Open("rose.engi");
+    	Enguin_Image img = Enguin_Image_Open("rose.engi");
+	Enguin_Image img2 = Enguin_Image_Open("flower.engi");
 
 	while(run){
 		ch = EnguinApi_Input_KeyPressed();
@@ -51,6 +52,7 @@ int main()
 		Enguin_Text_Draw(&surf, 22, 32, "Use AWSD to move out of it :)", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
 
 		Enguin_Image_Draw(&surf, &img, 6,6);
+		Enguin_Image_Draw(&surf, &img2, 16, 6);
 
 		Enguin_Rect_Draw(&surf, x, y, 2, 1, 'X', (int[3]){28, 27, 28}, (int[3]){217, 206, 217});
 		

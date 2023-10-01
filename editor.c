@@ -69,6 +69,10 @@ int main(int argc, char** argv)
             if(ch=='d'||ch=='D'){
                 ptr.x+=1;
             }
+            if(ch==' '||ch=='S'){
+                Enguin_Image_Save(filename, &img);
+                savedC = saved;
+            }
         }
         else{
             if(ch==KEY_UP){
@@ -130,10 +134,6 @@ int main(int argc, char** argv)
                 ptr.isPressed = 1;
             }
 		}
-        if(ch==' '||ch=='S'){
-            Enguin_Image_Save(filename, &img);
-            savedC = saved;
-        }
 
 		frameStart = EnguinApi_Utils_GetTicks();
 
