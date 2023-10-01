@@ -166,8 +166,10 @@ void EnguinApi_Canvas_Flush(EnguinApi_Canvas* canvas)
 
 void EnguinApi_Canvas_MoveTo(EnguinApi_Canvas* canvas, int x, int y)
 {
-	canvas->cursorX = x;
-	canvas->cursorY = y;
+	// if(x>=0&&x<canvas->width&&y>=0&&y<canvas->height){
+		canvas->cursorX = x;
+		canvas->cursorY = y;
+	// }
 }
 
 void EnguinApi_Canvas_Erease(EnguinApi_Canvas* canvas, int x1, int y1, int x2, int y2)
@@ -184,7 +186,9 @@ void EnguinApi_Canvas_Erease(EnguinApi_Canvas* canvas, int x1, int y1, int x2, i
 
 void EnguinApi_Canvas_EreaseOne(EnguinApi_Canvas* canvas, int x, int y)
 {
-	EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+	if(x>=0&&x<canvas->width&&y>=0&&y<canvas->height){
+		EnguinApi_Cell_Reset(&canvas->cells[y*canvas->width+x]);
+	}
 }
 
 void EnguinApi_Canvas_CursorHide()

@@ -19,6 +19,8 @@ int main()
 	float y = 0;
 	float x = 0;
 
+	float dx = 0;
+	float ds = 1;
 
 	while(run){
 		ch = EnguinApi_Input_KeyPressed();
@@ -38,14 +40,25 @@ int main()
 		if(ch=='d'||ch=='D'){
 			x+=2;
 		}
+		dx+=ds;
 
 		frameStart = EnguinApi_Utils_GetTicks();
 
-		Enguin_Text_Draw(&surf, 20, H/2, "This is interactive demo of Enguin!", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
-		Enguin_Text_Draw(&surf, 20+1, H/2+1, "You are a small block in most top left corner,", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
-		Enguin_Text_Draw(&surf, 20+2, H/2+2, "Use AWSD to move out of it :)", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+		Enguin_Text_Draw(&surf, 20, 30, "This is interactive demo of Enguin!", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+		Enguin_Text_Draw(&surf, 21, 31, "You are a small block in most top left corner,", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
+		Enguin_Text_Draw(&surf, 22, 32, "Use AWSD to move out of it :)", (int[3]){-1,-1,-1}, (int[3]){36, 35, 36});
 
 		Enguin_Rect_Draw(&surf, x, y, 2, 1, 'X', (int[3]){28, 27, 28}, (int[3]){217, 206, 217});
+		
+		Enguin_Rect_Fill(&surf, dx, 20, 2, 1, 'O', (int[3]){28, 27, 28}, (int[3]){0,0,0});
+	
+		// Enguin_Rect_Draw(&surf, 10, 10, 10, 5, '/', (int[3]){10,10,10}, (int[3]){227, 227, 20});
+
+		// Enguin_Ellipse_Draw(&surf, 15, 10, 10, 5, 'W', (int[3]){0,0,0}, (int[3]){245, 66, 164});
+
+		// Enguin_Ellipse_Fill(&surf, 15, 10, 10, 5, 'W', (int[3]){0,0,0}, (int[3]){245, 66, 164});
+
+		// Enguin_Line_Draw(&surf, 8, 8, 18, 18, 'L', (int[3]){0, 0, 28}, (int[3]){217, 206, 217});
 
 		Enguin_Text_Draw(&surf, 0, 0, strFPS, (int[3]){0,0,0}, (int[3]){245, 66, 164});
 		Enguin_Surface_Update(&surf);

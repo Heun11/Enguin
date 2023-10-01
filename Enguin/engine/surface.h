@@ -23,6 +23,10 @@ void Enguin_Text_Draw(Enguin_Surface* surface, int x, int y, char* text, int for
 
 // Graphics
 void Enguin_Pixel_Draw(Enguin_Surface* surface, int x, int y, char pixel, int fore[3], int back[3]);
+void Enguin_Line_Draw(Enguin_Surface* surface, int x1, int y1, int x2, int y2, char pixel, int fore[3], int back[3]);
 void Enguin_Rect_Draw(Enguin_Surface* surface, int x, int y, int w, int h, char pixel, int fore[3], int back[3]);
+void Enguin_Rect_Fill(Enguin_Surface* surface, int x, int y, int w, int h, char pixel, int fore[3], int back[3]);
+void Enguin_Ellipse_Draw(Enguin_Surface* surface, int xc, int yc, int rx, int ry, char ch, int fore[3], int back[3]);
+void Enguin_Ellipse_Fill(Enguin_Surface* surface, int xc, int yc, int rx, int ry, char ch, int fore[3], int back[3]);
 
 #endif
