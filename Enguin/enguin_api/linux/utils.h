@@ -8,8 +8,6 @@
 #include<unistd.h>
 #include<signal.h>
 
-int SRAND_CALL;
-
 int EnguinApi_Utils_RandomNumber(int, int);
 int EnguinApi_Utils_CountDigits(int);
 void EnguinApi_Utils_Sleep(float);

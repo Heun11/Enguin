@@ -22,7 +22,7 @@ int main()
 	float dx = 0;
 	float ds = 1;
 
-    	Enguin_Image img = Enguin_Image_Open("rose.engi");
+  Enguin_Image img = Enguin_Image_Open("rose.engi");
 	Enguin_Image img2 = Enguin_Image_Open("flower.engi");
 
 	while(run){
@@ -30,7 +30,7 @@ int main()
 		if(ch=='q'||ch=='Q'||ch==KEY_ESC){
 			break;
 		}
-		
+    
 		if(ch=='w'||ch=='W'){
 			y-=1;
 		}

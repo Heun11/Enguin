@@ -1,5 +1,7 @@
 #include"utils.h"
 
+int SRAND_CALL=0;
+
 int EnguinApi_Utils_GetTicks()
 {
 	return time(NULL)*1000;

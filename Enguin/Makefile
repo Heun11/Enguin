@@ -25,7 +25,7 @@ $(LIBRARY): $(OBJECTS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(LIBRARY) $(OBJECTS) $(DEPFILES)
+	rm $(OBJECTS) $(DEPFILES)
 
 see:
 	find . -name '*'
