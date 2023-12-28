@@ -49,6 +49,8 @@ Enguin is minimalistic game engine based in terminal technology. It is pretty mu
         Enguin_ImagePixel* pixels;
     }Enguin_Image;
 
+### Enguin functions:
+
     // Surface
     // wantF & wantB -> set to 1 if you want either background or foreground colors rendering (may be slower)
     Enguin_Surface Enguin_Surface_Init(int width, int height, char ch, int wantF, int wantB, int fore[3], int back[3]);
